@@ -14,9 +14,7 @@ export default function ProgressBar({
 ProgressBarProps): ReactElement {
 	return (
 		<div className="flex flex-col items-center justify-center">
-			<div
-				className="flex flex-row py-2"
-			>
+			<div className="flex flex-row py-2">
 				{formStageNames.map((name, index) => (
 					<div className="flex items-center">
 						<StageDisplay
