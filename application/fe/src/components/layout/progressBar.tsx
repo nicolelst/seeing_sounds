@@ -16,9 +16,8 @@ ProgressBarProps): ReactElement {
 		<div className="flex flex-col items-center justify-center">
 			<div className="flex flex-row py-2">
 				{formStageNames.map((name, index) => (
-					<div className="flex items-center">
+					<div className="flex items-center" key={index}>
 						<StageDisplay
-							key={index}
 							stageName={name}
 							stageNum={index + 1}
 							colour={
