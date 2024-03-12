@@ -4,26 +4,26 @@ Final Year Project submitted to the School of Computer Science and Engineering o
 // TODO: attach link to report
 // TODO: attach link to demo video
 
-# Running the application 
+## Running the application 
 ```
 cd application/fe
 pnpm run dev
 ```
 
 
-# Frontend (React JS)
+## Frontend (React JS)
 *see application/fe*
 
 Web page developed with [React Vite](https://vitejs.dev/) using components from [shadcn/ui](https://ui.shadcn.com/)
 
 
-# Backend (Python)
+## Backend (Python)
 *see application/be*
 
 Backend built with [FastAPI](https://fastapi.tiangolo.com/)
 
 
-# System flow
+## System flow
 Input: video file of multiple speakers
 
 1. Face detection with [MTCNN](https://github.com/timesler/facenet-pytorch?tab=readme-ov-file#guide-to-mtcnn-in-facenet-pytorch)

@@ -1,37 +1,42 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import Header from './components/layout/header'
+import ProgressBar from './components/layout/progressBar'
+import Footer from './components/layout/footer'
+import UploadStage from './components/stages/uploadStage'
+import SettingsStage from './components/stages/settingsStage'
+import ResultsStage from './components/stages/resultsStage'
+import InvalidStage from './components/stages/invalidStage'
 import { Button } from './shadcn/components/ui/button'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [formStageNum, setFormStageNum] = useState(1);
+  // TODO num stages & names should be calculated from a list of components 
+  const formStageNames = ["Upload video", "Adjust settings", "Done!"];
+
+  function nextStage() {
+		setFormStageNum((formStageNum % formStageNames.length) + 1);
+	}
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    // TODO: items-center dynamic sizes
+    <div className="flex flex-col w-screen h-screen">
+      <div className="flex flex-col h-full pt-8 mx-32 max-w-7xl">
+        <Header/>
+        <ProgressBar formStageNames={formStageNames} formStageNum={formStageNum} setFormStageNum={setFormStageNum}/>
+        <div className="flex-1 bg-slate-300">
+          {
+            (formStageNum === 1) ? <UploadStage/> :
+            (formStageNum === 2) ? <SettingsStage/> : 
+            (formStageNum === 3) ? <ResultsStage/> : 
+            <InvalidStage/>
+          }
+        </div>
+        <Button className="w-fit text-xs my-2 self-end" onClick={nextStage}>
+          NEXT
+        </Button>
       </div>
-      <h1>FYP IS HERE</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <div>
-        <Button>TEST ME</Button>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+      <Footer/>
+    </div>
   )
 }
 
