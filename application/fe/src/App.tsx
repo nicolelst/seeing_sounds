@@ -6,7 +6,8 @@ import UploadStage from "./components/stages/uploadStage";
 import SettingsStage from "./components/stages/settingsStage";
 import ResultsStage from "./components/stages/resultsStage";
 import InvalidStage from "./components/stages/invalidStage";
-import { Button } from "./shadcn/components/ui/button";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { FormInputs } from "./types/formInputs";
 
 function App() {
 	const [formStageNum, setFormStageNum] = useState(1);
@@ -14,39 +15,58 @@ function App() {
 	const formStageNames = ["Upload video", "Adjust settings", "Done!"];
 
 	function nextStage() {
+		// TODO check errors
 		setFormStageNum((formStageNum % formStageNames.length) + 1);
 	}
 
+	const {
+		register,
+		handleSubmit,
+		// watch,
+		formState: { errors },
+	} = useForm<FormInputs>();
+	const onSubmit: SubmitHandler<FormInputs> = (data) => {
+		console.log(data);
+		nextStage();
+	};
+
 	return (
 		// TODO: items-center dynamic sizes
-		<div className="flex flex-col w-screen h-screen">
-			<div className="flex flex-col h-full pt-8 space-y-2 mx-32 max-w-7xl">
-				<Header />
-				<ProgressBar
-					formStageNames={formStageNames}
-					formStageNum={formStageNum}
-					setFormStageNum={setFormStageNum}
-				/>
-				<div className="flex-1 bg-slate-300">
-					{formStageNum === 1 ? (
-						<UploadStage />
-					) : formStageNum === 2 ? (
-						<SettingsStage />
-					) : formStageNum === 3 ? (
-						<ResultsStage />
-					) : (
-						<InvalidStage />
-					)}
+		<form onSubmit={handleSubmit(onSubmit)}>
+			<div className="flex flex-col w-screen h-screen">
+				<div className="flex flex-col h-full pt-8 space-y-2 mx-32 max-w-7xl">
+					<Header />
+					<ProgressBar
+						formStageNames={formStageNames}
+						formStageNum={formStageNum}
+						setFormStageNum={setFormStageNum}
+					/>
+					<div className="flex-1 bg-slate-300">
+						{formStageNum === 1 ? (
+							<UploadStage
+								register={register}
+								errors={errors}
+								nextStage={nextStage}
+							/>
+						) : formStageNum === 2 ? (
+							<SettingsStage
+								register={register}
+								errors={errors}
+							/>
+						) : formStageNum === 3 ? (
+							<ResultsStage
+								register={register}
+								errors={errors}
+								nextStage={nextStage}
+							/>
+						) : (
+							<InvalidStage />
+						)}
+					</div>
 				</div>
-				<Button
-					className="w-fit text-xs my-2 self-end"
-					onClick={nextStage}
-				>
-					NEXT
-				</Button>
+				<Footer />
 			</div>
-			<Footer />
-		</div>
+		</form>
 	);
 }
 
