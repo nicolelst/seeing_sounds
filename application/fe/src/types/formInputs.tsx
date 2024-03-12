@@ -1,3 +1,4 @@
 export type FormInputs = {
-	exampleRequired: string;
+	videoInput: FileList;
+	// TODO add settings
 };

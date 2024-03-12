@@ -15,14 +15,14 @@ function App() {
 	const formStageNames = ["Upload video", "Adjust settings", "Done!"];
 
 	function nextStage() {
-		// TODO check errors
 		setFormStageNum((formStageNum % formStageNames.length) + 1);
 	}
 
 	const {
 		register,
 		handleSubmit,
-		// watch,
+		getValues,
+		trigger,
 		formState: { errors },
 	} = useForm<FormInputs>();
 	const onSubmit: SubmitHandler<FormInputs> = (data) => {
@@ -41,10 +41,12 @@ function App() {
 						formStageNum={formStageNum}
 						setFormStageNum={setFormStageNum}
 					/>
-					<div className="flex-1 bg-slate-300">
+					<div className="flex-1">
 						{formStageNum === 1 ? (
 							<UploadStage
 								register={register}
+								getValues={getValues}
+								trigger={trigger}
 								errors={errors}
 								nextStage={nextStage}
 							/>

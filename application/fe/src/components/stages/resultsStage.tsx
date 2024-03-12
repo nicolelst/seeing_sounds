@@ -19,8 +19,13 @@ export default function ResultsStage({
 			<div className="flex flex-col w-full h-full bg-green-300">
 				RESULTS
 			</div>
-			<Button className="w-fit my-2 self-end" onClick={nextStage}>
+			<Button
+				className="w-fit my-2 self-end"
+				type="reset"
+				onClick={nextStage}
+			>
 				Start over
+				{/* TODO reset form & clear videoInput field */}
 			</Button>
 		</div>
 	);
