@@ -24,7 +24,9 @@ function App() {
 		getValues,
 		trigger,
 		formState: { errors },
-	} = useForm<FormInputs>();
+	} = useForm<FormInputs>({
+		defaultValues: { numSpeakers: 2, annotationType: "floating" },
+	});
 	const onSubmit: SubmitHandler<FormInputs> = (data) => {
 		console.log(data);
 		nextStage();
@@ -58,6 +60,7 @@ function App() {
 						) : formStageNum === 3 ? (
 							<ResultsStage
 								register={register}
+								getValues={getValues}
 								errors={errors}
 								nextStage={nextStage}
 							/>
