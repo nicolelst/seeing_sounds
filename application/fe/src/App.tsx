@@ -59,9 +59,9 @@ function App() {
 							/>
 						) : formStageNum === 3 ? (
 							<ResultsStage
-								register={register}
+								// register={register}
 								getValues={getValues}
-								errors={errors}
+								// errors={errors}
 								nextStage={nextStage}
 							/>
 						) : (

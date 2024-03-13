@@ -59,6 +59,7 @@ function StageDisplay({
 				className={`rounded-full w-20 h-20 text-3xl font-semibold bg-${colour} hover:bg-${colour}`}
 				onClick={onClick}
 				disabled={disabled}
+				type="button"
 			>
 				{stageNum}
 			</Button>

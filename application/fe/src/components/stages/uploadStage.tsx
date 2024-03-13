@@ -52,11 +52,12 @@ export default function UploadStage({
 							className={
 								errors.videoInput ? "bg-red-100" : "bg-slate-50"
 							}
+							// TODO set value based on form values
 							{...register("videoInput", {
 								onChange: (e) => {
 									trigger("videoInput");
 									setVideoFilepath(
-										URL.createObjectURL(e.target.files[0])
+										URL.createObjectURL(e.target.files[0]) // TODO move this to post request ?
 									);
 								},
 								required: "Please upload a video.",
@@ -79,7 +80,7 @@ export default function UploadStage({
 					</div>
 				</div>
 				<div className="col-span-2 h-full w-full flex items-center justify-center">
-					<AspectRatio className="bg-blue-300" ratio={16 / 9}>
+					<AspectRatio ratio={16 / 9}>
 						<ReactPlayer
 							url={errors.videoInput ? "" : videoFilepath}
 							width="100%"
