@@ -19,6 +19,7 @@ import { FormInputs } from "@/types/formInputs";
 import { ReactElement, ReactNode } from "react";
 import { UseFormRegister, FieldError, FieldErrors } from "react-hook-form";
 import { ScrollArea } from "@/shadcn/components/ui/scroll-area";
+import { annotationType, annotationTypeMap } from "@/types/annotationType";
 
 interface SettingsStageProps {
 	register: UseFormRegister<FormInputs>;
@@ -189,7 +190,7 @@ function SettingItem({
 
 interface InterfaceSelectorProps {
 	disabled?: boolean;
-	value?: string;
+	value?: annotationType;
 }
 function InterfaceSelector({
 	disabled,
@@ -202,18 +203,11 @@ function InterfaceSelector({
 			</SelectTrigger>
 			<SelectContent>
 				<SelectGroup>
-					<SelectItem value="floating">
-						Floating captions (default)
-					</SelectItem>
-					<SelectItem value="colour">
-						Static captions coloured by speaker
-					</SelectItem>
-					<SelectItem value="pointer">
-						Static captions with pointers
-					</SelectItem>
-					<SelectItem value="traditional">
-						Traditional static captions
-					</SelectItem>
+					{Object.entries(annotationTypeMap).map((anotType) => (
+						<SelectItem key={anotType[0]} value={anotType[0]}>
+							{anotType[1]}
+						</SelectItem>
+					))}
 				</SelectGroup>
 			</SelectContent>
 		</Select>
