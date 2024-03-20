@@ -21,8 +21,11 @@ function App() {
 	const {
 		register,
 		handleSubmit,
+		setValue,
 		getValues,
 		trigger,
+		setError,
+		clearErrors,
 		formState: { errors },
 	} = useForm<FormInputs>({
 		defaultValues: { numSpeakers: 2, annotationType: "floating" },
@@ -48,8 +51,11 @@ function App() {
 							<UploadStage
 								register={register}
 								getValues={getValues}
+								setValue={setValue}
 								trigger={trigger}
 								errors={errors}
+								setError={setError}
+								clearErrors={clearErrors}
 								nextStage={nextStage}
 							/>
 						) : formStageNum === 2 ? (
