@@ -1,7 +1,6 @@
 import { ReactElement, useState } from "react";
 import ReactPlayer from "react-player";
 import { Button } from "@/shadcn/components/ui/button";
-import { Label } from "@/shadcn/components/ui/label";
 import { FormInputs } from "@/types/formInputs";
 import {
 	UseFormRegister,
@@ -13,8 +12,8 @@ import {
 	FieldErrors,
 } from "react-hook-form";
 import { AspectRatio } from "@/shadcn/components/ui/aspect-ratio";
-// import Dropzone from "react-dropzone";
 import { useDropzone } from "react-dropzone";
+import { UploadIcon } from "@radix-ui/react-icons";
 
 interface UploadStageProps {
 	register: UseFormRegister<FormInputs>;
@@ -47,7 +46,7 @@ export default function UploadStage({
 		<div className="flex flex-col w-full h-full">
 			<div className="grid grid-cols-3 gap-4 w-full h-full">
 				<div className="col-span-1 flex flex-col h-full w-full gap-y-4">
-					<div className="grid w-full items-center gap-1.5">
+					{/* <div className="grid w-full items-center gap-1.5">
 						{errors.videoInput ? (
 							<Label className="text-red-500">
 								{errors.videoInput.message}
@@ -55,7 +54,7 @@ export default function UploadStage({
 						) : (
 							<Label>Upload your video here</Label>
 						)}
-						{/* <Input
+						<Input
 							id="video"
 							type="file"
 							className={
@@ -82,10 +81,12 @@ export default function UploadStage({
 									return true;
 								},
 							})}
-						/> */}
-					</div>
+						/>
+					</div> */}
 					<FileDropzone
+						errors={errors}
 						setValue={setValue}
+            // getValues={getValues}
 						setError={setError}
 						clearErrors={clearErrors}
 						setVideoFilepath={setVideoFilepath}
@@ -114,22 +115,22 @@ export default function UploadStage({
 }
 
 interface FileDropzoneProps {
+	errors: FieldErrors<FormInputs>;
 	setValue: UseFormSetValue<FormInputs>;
+  // getValues: UseFormGetValues<FormInputs>;
 	setError: UseFormSetError<FormInputs>;
 	clearErrors: UseFormClearErrors<FormInputs>;
 	setVideoFilepath: React.Dispatch<React.SetStateAction<string>>;
 }
 function FileDropzone({
+	errors,
 	setValue,
+  // getValues,
 	setError,
 	clearErrors,
 	setVideoFilepath,
 }: FileDropzoneProps): ReactElement {
-	const {
-		getRootProps,
-		getInputProps,
-		// isFocused
-	} = useDropzone({
+	const { getRootProps, getInputProps, isDragActive } = useDropzone({
 		onDrop: (acceptedFiles) => {
 			if (acceptedFiles.length == 0) {
 				setError("videoInput", {
@@ -153,15 +154,34 @@ function FileDropzone({
 		// accept: TODO file types
 	});
 
+	const bgColour = isDragActive
+		? "gray-300"
+		: errors.videoInput
+		? "red-300"
+		: "gray-200";
+
+	const text = isDragActive
+		? "Release to select file."
+		: errors.videoInput
+		? errors.videoInput.message
+		: "Choose a video file or drag it here.";
+		// : "Drop your video file here, or click to select a file."; // makes icon move when drag active
+
 	return (
 		<div
 			{...getRootProps({
-				className: "h-full bg-gray-400",
-				// backgroundColor: "red",
+				className: `h-full dropzone bg-${bgColour}`,
 			})}
 		>
 			<input {...getInputProps()} />
-			<p>TODO DROPPABLE AREA</p>
+			<div className="h-full flex flex-col justify-center items-center text-center text-balance px-4">
+        <UploadIcon className="h-20 w-20 my-6"/>
+				<p className="font-bold">{text}</p>
+        <em>Accepted filetypes: MP4</em>
+        {/* <p>{getValues("videoInput") ? `Selected file: ${getValues("videoInput")[0].name}` : "No file selected."}</p> */}
+        {/* TODO show file name: getValues not updated when invalid file */}
+        {/* TODO add more filetypes */}
+			</div>
 		</div>
 	);
 	// 	<Dropzone
