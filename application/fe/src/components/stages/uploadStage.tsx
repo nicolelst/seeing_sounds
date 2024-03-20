@@ -13,7 +13,8 @@ import {
 	FieldErrors,
 } from "react-hook-form";
 import { AspectRatio } from "@/shadcn/components/ui/aspect-ratio";
-import Dropzone from "react-dropzone";
+// import Dropzone from "react-dropzone";
+import { useDropzone } from "react-dropzone";
 
 interface UploadStageProps {
 	register: UseFormRegister<FormInputs>;
@@ -124,44 +125,84 @@ function FileDropzone({
 	clearErrors,
 	setVideoFilepath,
 }: FileDropzoneProps): ReactElement {
+	const {
+		getRootProps,
+		getInputProps,
+		// isFocused
+	} = useDropzone({
+		onDrop: (acceptedFiles) => {
+			if (acceptedFiles.length == 0) {
+				setError("videoInput", {
+					type: "dropRequired",
+					message: "Please upload a video.",
+				});
+			} else if (acceptedFiles[0].type !== "video/mp4") {
+				// TODO add more valid formats
+				setError("videoInput", {
+					type: "dropType",
+					message: "Invalid video format.",
+				});
+			} else {
+				clearErrors();
+				setValue("videoInput", acceptedFiles as unknown as FileList);
+				setVideoFilepath(
+					URL.createObjectURL(acceptedFiles[0]) // TODO move this to post request ?
+				);
+			}
+		},
+		// accept: TODO file types
+	});
+
 	return (
-		<Dropzone
-			onDrop={(acceptedFiles) => {
-				if (acceptedFiles.length == 0) {
-					setError("videoInput", {
-						type: "dropRequired",
-						message: "Please upload a video.",
-					});
-				} else if (acceptedFiles[0].type !== "video/mp4") {
-					// TODO add more valid formats
-					setError("videoInput", {
-						type: "dropType",
-						message: "Invalid video format.",
-					});
-				} else {
-					clearErrors();
-					setValue(
-						"videoInput",
-						acceptedFiles as unknown as FileList
-					);
-					setVideoFilepath(
-						URL.createObjectURL(acceptedFiles[0]) // TODO move this to post request ?
-					);
-				}
-			}}
+		<div
+			{...getRootProps({
+				className: "h-full bg-gray-400",
+				// backgroundColor: "red",
+			})}
 		>
-			{({ getRootProps, getInputProps }) => (
-				<section className="h-full">
-					<div
-						{...getRootProps({
-							className: "h-full bg-gray-400",
-						})}
-					>
-						<input {...getInputProps()} />
-						<p>TODO DROPPABLE AREA</p>
-					</div>
-				</section>
-			)}
-		</Dropzone>
+			<input {...getInputProps()} />
+			<p>TODO DROPPABLE AREA</p>
+		</div>
 	);
+	// 	<Dropzone
+	// 		// TODO accept types
+	// 		onDrop={(acceptedFiles) => {
+	// 			if (acceptedFiles.length == 0) {
+	// 				setError("videoInput", {
+	// 					type: "dropRequired",
+	// 					message: "Please upload a video.",
+	// 				});
+	// 			} else if (acceptedFiles[0].type !== "video/mp4") {
+	// 				// TODO add more valid formats
+	// 				setError("videoInput", {
+	// 					type: "dropType",
+	// 					message: "Invalid video format.",
+	// 				});
+	// 			} else {
+	// 				clearErrors();
+	// 				setValue(
+	// 					"videoInput",
+	// 					acceptedFiles as unknown as FileList
+	// 				);
+	// 				setVideoFilepath(
+	// 					URL.createObjectURL(acceptedFiles[0]) // TODO move this to post request ?
+	// 				);
+	// 			}
+	// 		}}
+	// 	>
+	// 		{({ getRootProps, getInputProps }) => (
+	// 			<section className="h-full">
+	// 				<div
+	// 					{...getRootProps({
+	// 						className: "h-full", // bg-gray-400",
+	// 						backgroundColor: "red",
+	// 					})}
+	// 				>
+	// 					<input {...getInputProps()} />
+	// 					<p>TODO DROPPABLE AREA</p>
+	// 				</div>
+	// 			</section>
+	// 		)}
+	// 	</Dropzone>
+	// );
 }
