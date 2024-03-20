@@ -86,7 +86,7 @@ export default function UploadStage({
 					<FileDropzone
 						errors={errors}
 						setValue={setValue}
-            // getValues={getValues}
+						// getValues={getValues}
 						setError={setError}
 						clearErrors={clearErrors}
 						setVideoFilepath={setVideoFilepath}
@@ -94,12 +94,16 @@ export default function UploadStage({
 				</div>
 				<div className="col-span-2 h-full w-full flex items-center justify-center">
 					<AspectRatio ratio={16 / 9}>
-						<ReactPlayer
-							url={errors.videoInput ? "" : videoFilepath}
-							width="100%"
-							height="100%"
-							controls={true}
-						/>
+						{getValues("videoInput") && !errors.videoInput ? (
+							<ReactPlayer
+								url={errors.videoInput ? "" : videoFilepath}
+								width="100%"
+								height="100%"
+								controls={true}
+							/>
+						) : (
+							<Instructions />
+						)}
 					</AspectRatio>
 				</div>
 			</div>
@@ -117,7 +121,7 @@ export default function UploadStage({
 interface FileDropzoneProps {
 	errors: FieldErrors<FormInputs>;
 	setValue: UseFormSetValue<FormInputs>;
-  // getValues: UseFormGetValues<FormInputs>;
+	// getValues: UseFormGetValues<FormInputs>;
 	setError: UseFormSetError<FormInputs>;
 	clearErrors: UseFormClearErrors<FormInputs>;
 	setVideoFilepath: React.Dispatch<React.SetStateAction<string>>;
@@ -125,7 +129,7 @@ interface FileDropzoneProps {
 function FileDropzone({
 	errors,
 	setValue,
-  // getValues,
+	// getValues,
 	setError,
 	clearErrors,
 	setVideoFilepath,
@@ -165,7 +169,7 @@ function FileDropzone({
 		: errors.videoInput
 		? errors.videoInput.message
 		: "Choose a video file or drag it here.";
-		// : "Drop your video file here, or click to select a file."; // makes icon move when drag active
+	// : "Drop your video file here, or click to select a file."; // makes icon move when drag active
 
 	return (
 		<div
@@ -175,12 +179,12 @@ function FileDropzone({
 		>
 			<input {...getInputProps()} />
 			<div className="h-full flex flex-col justify-center items-center text-center text-balance px-4">
-        <UploadIcon className="h-20 w-20 my-6"/>
+				<UploadIcon className="h-20 w-20 my-6" />
 				<p className="font-bold">{text}</p>
-        <em>Accepted filetypes: MP4</em>
-        {/* <p>{getValues("videoInput") ? `Selected file: ${getValues("videoInput")[0].name}` : "No file selected."}</p> */}
-        {/* TODO show file name: getValues not updated when invalid file */}
-        {/* TODO add more filetypes */}
+				<em>Accepted filetypes: MP4</em>
+				{/* <p>{getValues("videoInput") ? `Selected file: ${getValues("videoInput")[0].name}` : "No file selected."}</p> */}
+				{/* TODO show file name: getValues not updated when invalid file */}
+				{/* TODO add more filetypes */}
 			</div>
 		</div>
 	);
@@ -225,4 +229,56 @@ function FileDropzone({
 	// 		)}
 	// 	</Dropzone>
 	// );
+}
+
+function Instructions(): ReactElement {
+	return (
+		<div className="flex flex-col py-4 px-4 gap-y-4 text-wrap">
+			<InstructionItem
+				num={1}
+				header="Upload a video"
+				description="Select a video of a conversation with multiple speakers.
+					Drag and drop the video file into the box on the left, or
+					click to browse files."
+			/>
+			<InstructionItem
+				num={2}
+				header="Adjust settings"
+				description="Customise interface options for the final video and transcript,
+				or adjust model parameters for speech separation and automatic
+				speech recognition."
+			/>
+			<InstructionItem
+				num={3}
+				header="Download results"
+				description="Watch the annotated video with captions and speaker
+				identification, save it for later, or download an annotated
+				transcript."
+			/>
+		</div>
+	);
+}
+
+interface InstructionItemProps {
+	num: number;
+	header: string;
+	description: string;
+}
+function InstructionItem({
+	num,
+	header,
+	description,
+}: InstructionItemProps): ReactElement {
+	return (
+		<div className="flex flex-col gap-y-1.5">
+			<div className="flex flex-row text-2xl font-bold">
+				<h1 className="w-8">{num}. </h1>
+				<h1>{header}</h1>
+			</div>
+			<div className="flex flex-row">
+				<div className="w-2 bg-gray-200 ml-1 mr-4" />
+				<p>{description}</p>
+			</div>
+		</div>
+	);
 }
