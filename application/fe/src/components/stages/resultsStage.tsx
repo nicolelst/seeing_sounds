@@ -12,6 +12,7 @@ import { UseFormGetValues } from "react-hook-form";
 import ReactPlayer from "react-player";
 import { ScrollArea } from "@/shadcn/components/ui/scroll-area";
 import { annotationTypeMap } from "@/types/annotationType";
+import { DEFAULT_HEX_10 } from "@/types/colourInfo";
 
 interface ResultsStageProps {
 	getValues: UseFormGetValues<FormInputs>;
@@ -106,7 +107,14 @@ export default function ResultsStage({
 													speaker.thumbnail
 												)}
 											/>
-											<AvatarFallback className="bg-gray-400 text-white">
+											<AvatarFallback
+												style={{
+													backgroundColor:
+														DEFAULT_HEX_10[idx],
+													// TODO use speaker colour?
+												}}
+												className="bg-gray-400 text-white"
+											>
 												{idx + 1}
 											</AvatarFallback>
 										</Avatar>
