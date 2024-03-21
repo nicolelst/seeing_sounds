@@ -1,16 +1,16 @@
+import { ReactElement } from "react";
+import { UseFormGetValues } from "react-hook-form";
+import ReactPlayer from "react-player";
 import { AspectRatio } from "@/shadcn/components/ui/aspect-ratio";
-import { Button } from "@/shadcn/components/ui/button";
 import {
 	Avatar,
 	AvatarFallback,
 	AvatarImage,
 } from "@/shadcn/components/ui/avatar";
-import { FormInputs } from "@/types/formInputs";
-import { FileTextIcon, VideoIcon } from "@radix-ui/react-icons";
-import { ReactElement } from "react";
-import { UseFormGetValues } from "react-hook-form";
-import ReactPlayer from "react-player";
 import { ScrollArea } from "@/shadcn/components/ui/scroll-area";
+import { Button } from "@/shadcn/components/ui/button";
+import { FileTextIcon, VideoIcon } from "@radix-ui/react-icons";
+import { FormInputs } from "@/types/formInputs";
 import { annotationTypeMap } from "@/types/annotationType";
 import { DEFAULT_HEX_10 } from "@/types/colourInfo";
 
@@ -19,7 +19,7 @@ interface ResultsStageProps {
 	nextStage: () => void;
 }
 
-export default function ResultsStage({
+export function ResultsStage({
 	getValues,
 	nextStage,
 }: ResultsStageProps): ReactElement {

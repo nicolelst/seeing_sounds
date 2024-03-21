@@ -1,7 +1,4 @@
 import { ReactElement } from "react";
-import ReactPlayer from "react-player";
-import { Button } from "@/shadcn/components/ui/button";
-import { FormInputs } from "@/types/formInputs";
 import {
 	UseFormRegister,
 	UseFormGetValues,
@@ -12,14 +9,17 @@ import {
 	FieldErrors,
 } from "react-hook-form";
 import { AspectRatio } from "@/shadcn/components/ui/aspect-ratio";
+import { Button } from "@/shadcn/components/ui/button";
+import { Input } from "@/shadcn/components/ui/input";
+import { Label } from "@/shadcn/components/ui/label";
 import { useDropzone } from "react-dropzone";
+import ReactPlayer from "react-player";
 import {
 	CheckCircledIcon,
 	CrossCircledIcon,
 	UploadIcon,
 } from "@radix-ui/react-icons";
-import { Label } from "@/shadcn/components/ui/label";
-import { Input } from "@/shadcn/components/ui/input";
+import { FormInputs } from "@/types/formInputs";
 
 interface UploadStageProps {
 	videoFilepath: string;
@@ -34,7 +34,7 @@ interface UploadStageProps {
 	nextStage: () => void;
 }
 
-export default function UploadStage({
+export function UploadStage({
 	videoFilepath,
 	setVideoFilepath,
 	register,

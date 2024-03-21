@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
 
-export default function Header(): ReactElement {
+export function Header(): ReactElement {
 	return (
 		<div className="flex flex-col text-center content-center align-middle">
 			{/* TODO configure header styles https://tailwindcss.com/docs/font-family#customizing-your-theme */}

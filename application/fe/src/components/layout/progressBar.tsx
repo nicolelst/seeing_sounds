@@ -7,7 +7,7 @@ interface ProgressBarProps {
 	formStageNum: number;
 	setFormStageNum: React.Dispatch<React.SetStateAction<number>>;
 }
-export default function ProgressBar({
+export function ProgressBar({
 	formStageNames,
 	formStageNum,
 	setFormStageNum,

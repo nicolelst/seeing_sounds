@@ -1,7 +1,7 @@
 import { Button } from "@/shadcn/components/ui/button";
 import { ReactElement } from "react";
 
-export default function Footer(): ReactElement {
+export function Footer(): ReactElement {
 	return (
 		<div className="flex flex-row bg-slate-900 text-white items-center sticky bottom-0 py-2 px-8">
 			<div className="flex w-full h-fit">

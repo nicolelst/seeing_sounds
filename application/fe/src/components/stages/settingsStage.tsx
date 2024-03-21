@@ -1,21 +1,3 @@
-import { Button } from "@/shadcn/components/ui/button";
-import { Input } from "@/shadcn/components/ui/input";
-import { Label } from "@/shadcn/components/ui/label";
-import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/shadcn/components/ui/select";
-import {
-	Accordion,
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
-} from "@/shadcn/components/ui/accordion";
-import { FormInputs } from "@/types/formInputs";
 import { ReactElement, ReactNode, useState } from "react";
 import {
 	UseFormRegister,
@@ -25,18 +7,35 @@ import {
 	UseFormSetValue,
 	UseFormWatch,
 } from "react-hook-form";
-import { ScrollArea } from "@/shadcn/components/ui/scroll-area";
-import { annotationType, annotationTypeMap } from "@/types/annotationType";
-import { Slider } from "@/shadcn/components/ui/slider";
-import { Switch } from "@/shadcn/components/ui/switch";
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from "@/shadcn/components/ui/accordion";
 import { Badge } from "@/shadcn/components/ui/badge";
+import { Button } from "@/shadcn/components/ui/button";
+import { Input } from "@/shadcn/components/ui/input";
+import { Label } from "@/shadcn/components/ui/label";
 import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
 } from "@/shadcn/components/ui/popover";
-
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/shadcn/components/ui/select";
+import { Slider } from "@/shadcn/components/ui/slider";
+import { Switch } from "@/shadcn/components/ui/switch";
+import { FormInputs } from "@/types/formInputs";
+import { ScrollArea } from "@/shadcn/components/ui/scroll-area";
 import { TwitterPicker } from "react-color";
+import { annotationType, annotationTypeMap } from "@/types/annotationType";
 import {
 	DEFAULT_HEX_10,
 	DEFAULT_RGB_10,
@@ -52,7 +51,7 @@ interface SettingsStageProps {
 	errors: FieldErrors<FormInputs>;
 }
 
-export default function SettingsStage({
+export function SettingsStage({
 	// register,
 	getValues,
 	setValue,

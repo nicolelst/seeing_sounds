@@ -1,11 +1,11 @@
 import { useState } from "react";
-import Header from "./components/layout/header";
-import ProgressBar from "./components/layout/progressBar";
-import Footer from "./components/layout/footer";
-import UploadStage from "./components/stages/uploadStage";
-import SettingsStage from "./components/stages/settingsStage";
-import ResultsStage from "./components/stages/resultsStage";
-import InvalidStage from "./components/stages/invalidStage";
+import { Header, Footer, ProgressBar } from "./components/layout";
+import {
+	UploadStage,
+	SettingsStage,
+	ResultsStage,
+	InvalidStage,
+} from "./components/stages";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { FormInputs } from "./types/formInputs";
 
