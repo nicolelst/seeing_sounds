@@ -13,7 +13,11 @@ import {
 } from "react-hook-form";
 import { AspectRatio } from "@/shadcn/components/ui/aspect-ratio";
 import { useDropzone } from "react-dropzone";
-import { UploadIcon } from "@radix-ui/react-icons";
+import {
+	CheckCircledIcon,
+	CrossCircledIcon,
+	UploadIcon,
+} from "@radix-ui/react-icons";
 
 interface UploadStageProps {
 	register: UseFormRegister<FormInputs>;
@@ -158,29 +162,46 @@ function FileDropzone({
 		// accept: TODO file types
 	});
 
-	const bgColour = isDragActive
-		? "gray-300"
-		: errors.videoInput
-		? "red-300"
-		: "gray-200";
+	const iconStyle = "h-20 w-20 my-6";
 
-	const text = isDragActive
-		? "Release to select file."
+	const dropzoneContents = {
+		default: {
+			bgColour: "gray-200",
+			text: "Choose a video file or drag it here.",
+			icon: <UploadIcon className={iconStyle} />,
+		},
+		dragging: {
+			bgColour: "gray-300",
+			text: "Release to select file.",
+			icon: <CheckCircledIcon className={iconStyle} />,
+		},
+		error: {
+			bgColour: "red-300",
+			text:
+				errors.videoInput?.message ??
+				"There was an unexpected issue. Please try again.",
+			icon: <CrossCircledIcon className={iconStyle} />,
+		},
+	};
+
+	const dropzoneState = isDragActive
+		? "dragging"
 		: errors.videoInput
-		? errors.videoInput.message
-		: "Choose a video file or drag it here.";
-	// : "Drop your video file here, or click to select a file."; // makes icon move when drag active
+		? "error"
+		: "default";
 
 	return (
 		<div
 			{...getRootProps({
-				className: `h-full dropzone bg-${bgColour}`,
+				className: `h-full dropzone bg-${dropzoneContents[dropzoneState].bgColour}`,
 			})}
 		>
 			<input {...getInputProps()} />
 			<div className="h-full flex flex-col justify-center items-center text-center text-balance px-4">
-				<UploadIcon className="h-20 w-20 my-6" />
-				<p className="font-bold">{text}</p>
+				{dropzoneContents[dropzoneState].icon}
+				<p className="font-bold">
+					{dropzoneContents[dropzoneState].text}
+				</p>
 				<em>Accepted filetypes: MP4</em>
 				{/* <p>{getValues("videoInput") ? `Selected file: ${getValues("videoInput")[0].name}` : "No file selected."}</p> */}
 				{/* TODO show file name: getValues not updated when invalid file */}
@@ -188,47 +209,6 @@ function FileDropzone({
 			</div>
 		</div>
 	);
-	// 	<Dropzone
-	// 		// TODO accept types
-	// 		onDrop={(acceptedFiles) => {
-	// 			if (acceptedFiles.length == 0) {
-	// 				setError("videoInput", {
-	// 					type: "dropRequired",
-	// 					message: "Please upload a video.",
-	// 				});
-	// 			} else if (acceptedFiles[0].type !== "video/mp4") {
-	// 				// TODO add more valid formats
-	// 				setError("videoInput", {
-	// 					type: "dropType",
-	// 					message: "Invalid video format.",
-	// 				});
-	// 			} else {
-	// 				clearErrors();
-	// 				setValue(
-	// 					"videoInput",
-	// 					acceptedFiles as unknown as FileList
-	// 				);
-	// 				setVideoFilepath(
-	// 					URL.createObjectURL(acceptedFiles[0]) // TODO move this to post request ?
-	// 				);
-	// 			}
-	// 		}}
-	// 	>
-	// 		{({ getRootProps, getInputProps }) => (
-	// 			<section className="h-full">
-	// 				<div
-	// 					{...getRootProps({
-	// 						className: "h-full", // bg-gray-400",
-	// 						backgroundColor: "red",
-	// 					})}
-	// 				>
-	// 					<input {...getInputProps()} />
-	// 					<p>TODO DROPPABLE AREA</p>
-	// 				</div>
-	// 			</section>
-	// 		)}
-	// 	</Dropzone>
-	// );
 }
 
 function Instructions(): ReactElement {
@@ -239,7 +219,8 @@ function Instructions(): ReactElement {
 				header="Upload a video"
 				description="Select a video of a conversation with multiple speakers.
 					Drag and drop the video file into the box on the left, or
-					click to browse files."
+					click to browse files. (Accepted filetypes: MP4)"
+				// TODO more filetypes
 			/>
 			<InstructionItem
 				num={2}
