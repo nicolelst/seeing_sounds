@@ -17,21 +17,36 @@ import {
 } from "@/shadcn/components/ui/accordion";
 import { FormInputs } from "@/types/formInputs";
 import { ReactElement, ReactNode } from "react";
-import { UseFormRegister, FieldError, FieldErrors } from "react-hook-form";
+import {
+	UseFormRegister,
+	FieldError,
+	FieldErrors,
+	UseFormGetValues,
+	UseFormSetValue,
+	UseFormWatch,
+} from "react-hook-form";
 import { ScrollArea } from "@/shadcn/components/ui/scroll-area";
 import { annotationType, annotationTypeMap } from "@/types/annotationType";
+import { Slider } from "@/shadcn/components/ui/slider";
 
 interface SettingsStageProps {
 	register: UseFormRegister<FormInputs>;
+	getValues: UseFormGetValues<FormInputs>;
+	setValue: UseFormSetValue<FormInputs>;
+	watch: UseFormWatch<FormInputs>;
 	errors: FieldErrors<FormInputs>;
 }
 
 export default function SettingsStage({
 	register,
+	getValues,
+	setValue,
+	watch,
 	errors,
 }: SettingsStageProps): ReactElement {
 	return (
 		<div className="flex flex-col w-full h-full">
+			{/* TODO validation + error messages */}
 			{/* <input {...register("exampleRequired", { required: true })} />
 				{errors.exampleRequired && <span>This field is required</span>} */}
 			<Accordion
@@ -42,6 +57,31 @@ export default function SettingsStage({
 			>
 				<SettingAccordionItem value="video" header="Video annotation">
 					<div className="flex flex-col gap-4">
+						<SettingItem
+							label="Select captioning interface"
+							error={undefined}
+							// TODO add error
+						>
+							{/* TODO info button for interface preview/explanation */}
+							{/* TODO register annotationType */}
+							{/* TODO enable when options available */}
+							{/* TODO change value based on form */}
+							<InterfaceSelector
+								selectedValue={getValues("annotationType")}
+								setValue={setValue}
+							/>
+						</SettingItem>
+						<SettingItem
+							label="Font size"
+							error={undefined}
+							// TODO add error
+						>
+							<FontSlider
+								getValues={getValues}
+								setValue={setValue}
+								watch={watch}
+							/>
+						</SettingItem>
 						<SettingItem
 							label="How many speakers are in the video?"
 							error={errors.numSpeakers}
@@ -60,14 +100,14 @@ export default function SettingsStage({
 							/>
 						</SettingItem>
 						<SettingItem
-							label="Select captioning interface"
+							label="Speaker colours"
 							error={undefined}
+							// TODO add error
 						>
-							{/* TODO info button for interface preview/explanation */}
-							{/* TODO register annotationType */}
-							{/* TODO enable when options available */}
-							{/* TODO change value based on form */}
-							<InterfaceSelector value="floating" />
+							<CaptionColourInputs
+								getValues={getValues}
+								setValue={setValue}
+							/>
 						</SettingItem>
 					</div>
 				</SettingAccordionItem>
@@ -190,14 +230,22 @@ function SettingItem({
 
 interface InterfaceSelectorProps {
 	disabled?: boolean;
-	value?: annotationType;
+	selectedValue?: annotationType;
+	setValue: UseFormSetValue<FormInputs>;
 }
 function InterfaceSelector({
 	disabled,
-	value,
+	selectedValue,
+	setValue,
 }: InterfaceSelectorProps): ReactElement {
 	return (
-		<Select disabled={disabled ?? false} defaultValue={value ?? "floating"}>
+		<Select
+			disabled={disabled ?? false}
+			defaultValue={selectedValue ?? "floating"}
+			onValueChange={(value) =>
+				setValue("annotationType", value as annotationType)
+			}
+		>
 			<SelectTrigger>
 				<SelectValue placeholder="Select an interface" />
 			</SelectTrigger>
@@ -211,5 +259,60 @@ function InterfaceSelector({
 				</SelectGroup>
 			</SelectContent>
 		</Select>
+	);
+}
+
+interface FontSliderProps {
+	getValues: UseFormGetValues<FormInputs>;
+	setValue: UseFormSetValue<FormInputs>;
+	watch: UseFormWatch<FormInputs>;
+}
+function FontSlider({
+	getValues,
+	setValue,
+	watch,
+}: FontSliderProps): ReactElement {
+	const fontSizeMap: Record<number, [string, string]> = {
+		18: ["xs", "Small"],
+		24: ["base", "Default"],
+		30: ["lg", "Large"],
+		36: ["2xl", "Giant"],
+	};
+
+	return (
+		<div className="h-9 grid grid-cols-4">
+			<p
+				className={`col-span-1 flex items-center text-${
+					fontSizeMap[watch("fontSize")][0]
+				}`}
+			>
+				{fontSizeMap[watch("fontSize")][1]}
+			</p>
+			<Slider
+				className="col-span-3"
+				defaultValue={[getValues("fontSize")]}
+				min={18}
+				max={36}
+				step={6}
+				onValueChange={(value) => setValue("fontSize", value[0])}
+			/>
+		</div>
+	);
+}
+
+interface CaptionColourInputsProps {
+	getValues: UseFormGetValues<FormInputs>;
+	setValue: UseFormSetValue<FormInputs>;
+}
+function CaptionColourInputs({
+	getValues,
+	setValue,
+}: CaptionColourInputsProps): ReactElement {
+	// randomly select getValues("numSpeakers") colours
+	// display as black / white text on coloured background
+	return (
+		<div>
+			TODO
+		</div>
 	);
 }

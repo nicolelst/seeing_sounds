@@ -23,12 +23,17 @@ function App() {
 		handleSubmit,
 		setValue,
 		getValues,
+		watch,
 		trigger,
 		setError,
 		clearErrors,
 		formState: { errors },
 	} = useForm<FormInputs>({
-		defaultValues: { numSpeakers: 2, annotationType: "floating" },
+		defaultValues: {
+			numSpeakers: 2,
+			annotationType: "floating",
+			fontSize: 24,
+		},
 	});
 	const onSubmit: SubmitHandler<FormInputs> = (data) => {
 		console.log(data);
@@ -61,6 +66,9 @@ function App() {
 						) : formStageNum === 2 ? (
 							<SettingsStage
 								register={register}
+								getValues={getValues}
+								setValue={setValue}
+								watch={watch}
 								errors={errors}
 							/>
 						) : formStageNum === 3 ? (
