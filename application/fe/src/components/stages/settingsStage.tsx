@@ -133,7 +133,7 @@ SettingsStageProps): ReactElement {
 				>
 					<div className="flex flex-col gap-4">
 						<SettingItem
-							label="Setting"
+							label="Speaker names TODO"
 							error={undefined}
 							// errors.numSpeakers
 						>

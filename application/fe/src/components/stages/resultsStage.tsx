@@ -29,27 +29,27 @@ export function ResultsStage({
 		annotationType: getValues("annotationType"),
 		speakers: [
 			{
-				name: "one",
+				name: "Speaker 1",
 				thumbnail: new File([""], "image_one"),
 			},
 			{
-				name: "two",
+				name: "Speaker 2",
 				thumbnail: new File([""], "image_two"),
 			},
 			{
-				name: "three",
+				name: "Speaker 3",
 				thumbnail: new File([""], "image_three"),
 			},
 			{
-				name: "four",
+				name: "Speaker 4",
 				thumbnail: new File([""], "image_four"),
 			},
 			{
-				name: "five",
+				name: "Speaker 5",
 				thumbnail: new File([""], "image_five"),
 			},
 			{
-				name: "six",
+				name: "Speaker 6",
 				thumbnail: new File([""], "image_six"),
 			},
 		],
@@ -90,38 +90,9 @@ export function ResultsStage({
 							<p>
 								<b>Speakers </b>({MOCK_RESULT.speakers.length}):
 							</p>
-							<ScrollArea
-								className={`${
-									MOCK_RESULT.speakers.length > 3
-										? "h-36"
-										: "h-fit"
-								} px-2`}
-							>
-								{/* TODO dynamic height ? */}
-								{MOCK_RESULT.speakers.map((speaker, idx) => (
-									<div className="flex flex-row space-x-4 items-center mb-2">
-										<Avatar>
-											{/* <AvatarImage src="https://github.com/shadcn.png" /> */}
-											<AvatarImage
-												src={URL.createObjectURL(
-													speaker.thumbnail
-												)}
-											/>
-											<AvatarFallback
-												style={{
-													backgroundColor:
-														DEFAULT_HEX_10[idx],
-													// TODO use speaker colour?
-												}}
-												className="bg-gray-400 text-white"
-											>
-												{idx + 1}
-											</AvatarFallback>
-										</Avatar>
-										<em>{speaker.name}</em>
-									</div>
-								))}
-							</ScrollArea>
+							<SpeakerListDisplay
+								speakers={MOCK_RESULT.speakers}
+							/>
 						</div>
 					</div>
 					<div className="grid grid-cols-2 space-x-2">
@@ -146,5 +117,45 @@ export function ResultsStage({
 				{/* TODO reset form & clear videoInput field */}
 			</Button>
 		</div>
+	);
+}
+
+interface SpeakerListDisplayProps {
+	speakers: {
+		name: string;
+		thumbnail: File;
+	}[];
+}
+function SpeakerListDisplay({
+	speakers,
+}: SpeakerListDisplayProps): ReactElement {
+	return (
+		<ScrollArea
+			className={`${speakers.length > 3 ? "h-36" : "h-fit"} px-2`}
+		>
+			{/* TODO dynamic height ? */}
+			{speakers.map((speaker, idx) => (
+				<div className="flex flex-row space-x-4 items-center mb-2">
+					<Avatar
+						className="h-16 w-16 border-solid border-4"
+						style={{ borderColor: DEFAULT_HEX_10[idx] }}
+						// TODO use speaker colour
+					>
+						{/* <AvatarImage src="https://github.com/shadcn.png" /> */}
+						<AvatarImage
+							src={URL.createObjectURL(speaker.thumbnail)}
+						/>
+						<AvatarFallback
+							style={{ backgroundColor: DEFAULT_HEX_10[idx] }}
+							// TODO use speaker colour
+							className="text-white text-lg"
+						>
+							{idx + 1}
+						</AvatarFallback>
+					</Avatar>
+					<em>{speaker.name}</em>
+				</div>
+			))}
+		</ScrollArea>
 	);
 }
