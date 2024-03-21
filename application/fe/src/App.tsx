@@ -11,6 +11,7 @@ import { FormInputs } from "./types/formInputs";
 
 function App() {
 	const [formStageNum, setFormStageNum] = useState(1);
+	const [videoFilepath, setVideoFilepath] = useState<string>("");
 	// TODO num stages & names should be calculated from a list of components
 	const formStageNames = ["Upload video", "Adjust settings", "Done!"];
 
@@ -30,9 +31,10 @@ function App() {
 		formState: { errors },
 	} = useForm<FormInputs>({
 		defaultValues: {
-			numSpeakers: 2,
+			numSpeakers: 6, // TODO remove when validation is in for numSpeakers
 			annotationType: "floating",
 			fontSize: 24,
+			captionBlackText: false,
 		},
 	});
 	const onSubmit: SubmitHandler<FormInputs> = (data) => {
@@ -54,6 +56,8 @@ function App() {
 					<div className="flex-1">
 						{formStageNum === 1 ? (
 							<UploadStage
+								videoFilepath={videoFilepath}
+								setVideoFilepath={setVideoFilepath}
 								register={register}
 								getValues={getValues}
 								setValue={setValue}

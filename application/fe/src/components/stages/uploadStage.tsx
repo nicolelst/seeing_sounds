@@ -1,4 +1,4 @@
-import { ReactElement, useState } from "react";
+import { ReactElement } from "react";
 import ReactPlayer from "react-player";
 import { Button } from "@/shadcn/components/ui/button";
 import { FormInputs } from "@/types/formInputs";
@@ -18,8 +18,12 @@ import {
 	CrossCircledIcon,
 	UploadIcon,
 } from "@radix-ui/react-icons";
+import { Label } from "@/shadcn/components/ui/label";
+import { Input } from "@/shadcn/components/ui/input";
 
 interface UploadStageProps {
+	videoFilepath: string;
+	setVideoFilepath: React.Dispatch<React.SetStateAction<string>>;
 	register: UseFormRegister<FormInputs>;
 	getValues: UseFormGetValues<FormInputs>;
 	setValue: UseFormSetValue<FormInputs>;
@@ -31,6 +35,9 @@ interface UploadStageProps {
 }
 
 export default function UploadStage({
+	videoFilepath,
+	setVideoFilepath,
+	register,
 	getValues,
 	setValue,
 	trigger,
@@ -44,77 +51,78 @@ export default function UploadStage({
 		if (getValues("videoInput") && !errors.videoInput) nextStage();
 	}
 
-	const [videoFilepath, setVideoFilepath] = useState<string>("");
-
 	return (
 		<div className="flex flex-col w-full h-full">
 			<div className="grid grid-cols-3 gap-4 w-full h-full">
 				<div className="col-span-1 flex flex-col h-full w-full gap-y-4">
-					{/* <div className="grid w-full items-center gap-1.5">
-						{errors.videoInput ? (
-							<Label className="text-red-500">
-								{errors.videoInput.message}
-							</Label>
-						) : (
-							<Label>Upload your video here</Label>
-						)}
-						<Input
-							id="video"
-							type="file"
-							className={
-								errors.videoInput ? "bg-red-100" : "bg-slate-50"
-							}
-							// TODO set value based on form values
-							{...register("videoInput", {
-								onChange: (e) => {
-									trigger("videoInput");
-									setVideoFilepath(
-										URL.createObjectURL(e.target.files[0]) // TODO move this to post request ?
-									);
-								},
-								required: "Please upload a video.",
-								validate: (value: FileList) => {
-									if (value.length === 0) {
-										return "Please upload a video.";
-									}
-									const file = value[0];
-									if (file.type !== "video/mp4") {
-										// TODO add more valid formats
-										return "Invalid video format.";
-									}
-									return true;
-								},
-							})}
-						/>
-					</div> */}
 					<FileDropzone
 						errors={errors}
 						setValue={setValue}
 						// getValues={getValues}
 						setError={setError}
 						clearErrors={clearErrors}
+						videoFilepath={videoFilepath}
 						setVideoFilepath={setVideoFilepath}
 					/>
 				</div>
-				<div className="col-span-2 h-full w-full flex items-center justify-center">
-					<AspectRatio ratio={16 / 9}>
-						{getValues("videoInput") && !errors.videoInput ? (
-							<ReactPlayer
-								url={errors.videoInput ? "" : videoFilepath}
-								width="100%"
-								height="100%"
-								controls={true}
-							/>
-						) : (
-							<Instructions />
-						)}
-					</AspectRatio>
+				<div className="col-span-2 h-full w-full flex flex-col items-center justify-center">
+					{getValues("videoInput") && !errors.videoInput ? (
+						<div className="flex flex-col w-full h-full justify-center">
+							<AspectRatio ratio={16 / 9}>
+								<ReactPlayer
+									url={errors.videoInput ? "" : videoFilepath}
+									width="100%"
+									height="100%"
+									controls={true}
+								/>
+							</AspectRatio>
+							<div className="flex flex-row gap-10 my-4">
+								<Label
+									className={`text-lg text-nowrap px-2 ${
+										errors.numSpeakers
+											? "text-red-600"
+											: "text-black"
+									}`}
+								>
+									{errors.numSpeakers
+										? errors.numSpeakers.message
+										: "How many speakers are in the video?"}
+								</Label>
+								<Input
+									className={`${
+										errors.numSpeakers
+											? "bg-red-200"
+											: "bg-white"
+									}`}
+									{...register("numSpeakers", {
+										required: true,
+										valueAsNumber: true,
+										min: 1,
+										max: 10,
+										// TODO max as per resolution and models?
+										// TODO reject decimals, letters
+										// TODO prevent next without this value
+										// setValueAs: v => parseInt(v),
+										// onChange: (e) => {
+										//   return e.target.value.replace(/[^1-9]/g, '');
+										// },
+									})}
+								/>
+							</div>
+						</div>
+					) : (
+						<Instructions />
+					)}
 				</div>
 			</div>
 			<Button
 				className="w-fit my-2 self-end"
 				onClick={handleNext}
-				disabled={!getValues("videoInput") || errors.videoInput}
+				disabled={
+					!getValues("videoInput") ||
+					errors.videoInput ||
+					errors.numSpeakers
+				}
 			>
 				Next
 			</Button>
@@ -128,6 +136,7 @@ interface FileDropzoneProps {
 	// getValues: UseFormGetValues<FormInputs>;
 	setError: UseFormSetError<FormInputs>;
 	clearErrors: UseFormClearErrors<FormInputs>;
+	videoFilepath: string;
 	setVideoFilepath: React.Dispatch<React.SetStateAction<string>>;
 }
 function FileDropzone({
@@ -136,6 +145,7 @@ function FileDropzone({
 	// getValues,
 	setError,
 	clearErrors,
+	// videoFilepath,
 	setVideoFilepath,
 }: FileDropzoneProps): ReactElement {
 	const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -165,18 +175,19 @@ function FileDropzone({
 	const iconStyle = "h-20 w-20 my-6";
 
 	const dropzoneContents = {
+		// TODO add one for accepted file, condition on videoFilepath existing, show name of file
 		default: {
-			bgColour: "gray-200",
+			bgColour: "bg-gray-200",
 			text: "Choose a video file or drag it here.",
 			icon: <UploadIcon className={iconStyle} />,
 		},
 		dragging: {
-			bgColour: "gray-300",
+			bgColour: "bg-gray-300",
 			text: "Release to select file.",
 			icon: <CheckCircledIcon className={iconStyle} />,
 		},
 		error: {
-			bgColour: "red-300",
+			bgColour: "bg-red-300",
 			text:
 				errors.videoInput?.message ??
 				"There was an unexpected issue. Please try again.",
@@ -193,7 +204,7 @@ function FileDropzone({
 	return (
 		<div
 			{...getRootProps({
-				className: `h-full dropzone bg-${dropzoneContents[dropzoneState].bgColour}`,
+				className: `h-full dropzone ${dropzoneContents[dropzoneState].bgColour}`,
 			})}
 		>
 			<input {...getInputProps()} />
@@ -213,7 +224,7 @@ function FileDropzone({
 
 function Instructions(): ReactElement {
 	return (
-		<div className="flex flex-col py-4 px-4 gap-y-4 text-wrap">
+		<div className="flex flex-col w-full h-full py-4 px-4 gap-y-4 justify-start text-wrap">
 			<InstructionItem
 				num={1}
 				header="Upload a video"
