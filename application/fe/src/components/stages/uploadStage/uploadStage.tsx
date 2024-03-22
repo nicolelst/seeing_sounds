@@ -8,6 +8,7 @@ import {
 	UseFormTrigger,
 	FieldErrors,
 	UseFormWatch,
+	UseFormResetField,
 } from "react-hook-form";
 import { AspectRatio } from "@/shadcn/components/ui/aspect-ratio";
 import { Button } from "@/shadcn/components/ui/button";
@@ -23,6 +24,7 @@ interface UploadStageProps {
 	watch: UseFormWatch<FormInputs>;
 	getValues: UseFormGetValues<FormInputs>;
 	setValue: UseFormSetValue<FormInputs>;
+	resetField: UseFormResetField<FormInputs>
 	trigger: UseFormTrigger<FormInputs>;
 	errors: FieldErrors<FormInputs>;
 	setError: UseFormSetError<FormInputs>;
@@ -37,6 +39,7 @@ export function UploadStage({
 	register,
 	getValues,
 	setValue,
+	resetField,
 	trigger,
 	errors,
 	setError,
@@ -56,6 +59,7 @@ export function UploadStage({
 						errors={errors}
 						register={register}
 						setValue={setValue}
+						resetField={resetField}
 						getValues={getValues}
 						setError={setError}
 						clearErrors={clearErrors}

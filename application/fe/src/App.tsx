@@ -23,6 +23,7 @@ function App() {
 		register,
 		handleSubmit,
 		setValue,
+		resetField,
 		getValues,
 		watch,
 		trigger,
@@ -61,6 +62,7 @@ function App() {
 								watch={watch}
 								getValues={getValues}
 								setValue={setValue}
+								resetField={resetField}
 								trigger={trigger}
 								errors={errors}
 								setError={setError}

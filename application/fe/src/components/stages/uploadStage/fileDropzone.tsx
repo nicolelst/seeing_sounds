@@ -4,6 +4,7 @@ import {
 	UseFormClearErrors,
 	UseFormGetValues,
 	UseFormRegister,
+	UseFormResetField,
 	UseFormSetError,
 	UseFormSetValue,
 } from "react-hook-form";
@@ -25,8 +26,9 @@ import {
 interface FileDropzoneProps {
 	errors: FieldErrors<FormInputs>;
 	register: UseFormRegister<FormInputs>;
-	setValue: UseFormSetValue<FormInputs>;
 	getValues: UseFormGetValues<FormInputs>;
+	setValue: UseFormSetValue<FormInputs>;
+	resetField: UseFormResetField<FormInputs>
 	setError: UseFormSetError<FormInputs>;
 	clearErrors: UseFormClearErrors<FormInputs>;
 	videoFilepath: string;
@@ -36,8 +38,9 @@ interface FileDropzoneProps {
 export default function FileDropzone({
 	errors,
 	register,
-	setValue,
 	getValues,
+	setValue,
+	resetField,
 	setError,
 	clearErrors,
 	videoFilepath,
@@ -56,6 +59,7 @@ export default function FileDropzone({
 					type: "dropType",
 					message: "Invalid video format.",
 				});
+				resetField("numSpeakers");
 			} else {
 				clearErrors();
 				setValue("videoInput", acceptedFiles as unknown as FileList);
