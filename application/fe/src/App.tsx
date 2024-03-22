@@ -45,14 +45,14 @@ function App() {
 	});
 	const onSubmit: SubmitHandler<FormInputs> = (data) => {
 		console.log(data);
-		nextStage();
+		// nextStage();
 	};
 
 	return (
 		// TODO: items-center dynamic sizes
 		<form onSubmit={handleSubmit(onSubmit)}>
 			<div className="flex flex-col w-screen h-screen">
-				<div className="flex flex-col h-full pt-8 space-y-2 mx-32 max-w-7xl">
+				<div className="flex flex-col h-full pt-12 space-y-2 mx-32 max-w-7xl">
 					<Header />
 					<ProgressBar
 						formStageNames={formStageNames}
@@ -77,6 +77,7 @@ function App() {
 							/>
 						) : formStageNum === 2 ? (
 							<SettingsStage
+								handleNext={nextStage}
 								register={register}
 								getValues={getValues}
 								setValue={setValue}

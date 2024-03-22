@@ -85,7 +85,7 @@ export function UploadStage({
 				</div>
 			</div>
 			<Button
-				className="w-fit my-2 self-end"
+				className="w-fit my-3 self-end"
 				onClick={handleNext}
 				disabled={
 					!watch("videoInput") ||

@@ -18,6 +18,7 @@ import SettingsAccordionItem from "./settingsAccordionItem";
 import SettingItem from "./settingItem";
 
 interface SettingsStageProps {
+	handleNext: () => void;
 	register: UseFormRegister<FormInputs>;
 	getValues: UseFormGetValues<FormInputs>;
 	setValue: UseFormSetValue<FormInputs>;
@@ -26,6 +27,7 @@ interface SettingsStageProps {
 }
 
 export function SettingsStage({
+	handleNext,
 	// register,
 	getValues,
 	setValue,
@@ -43,7 +45,7 @@ SettingsStageProps): ReactElement {
 				defaultValue="video"
 				className="w-full h-full max-w-2xl mx-auto"
 			>
-				<SettingsAccordionItem value="video" header="Video annotation">
+				<SettingsAccordionItem value="video" header="Video annotation settings">
 					<div className="flex flex-col gap-4">
 						<SettingItem
 							label="Select captioning interface"
@@ -107,7 +109,7 @@ SettingsStageProps): ReactElement {
 				</SettingsAccordionItem>
 				<SettingsAccordionItem
 					value="transcript"
-					header="Video transcript"
+					header="Video transcript settings"
 				>
 					<div className="flex flex-col gap-4">
 						<SettingItem
@@ -163,7 +165,11 @@ SettingsStageProps): ReactElement {
 					</div>
 				</SettingsAccordionItem>
 			</Accordion>
-			<Button className="w-fit my-2 self-end" type="submit">
+			<Button className="w-fit my-3 self-end" 
+			onClick={handleNext}
+			// type="submit"
+			>
+				{/* TODO post request */}
 				Next
 			</Button>
 		</div>

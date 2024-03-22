@@ -8,6 +8,8 @@ import { FormInputs } from "@/types/formInputs";
 import { annotationTypeMap } from "@/types/annotationType";
 import SpeakerListDisplay from "./speakerListDisplay";
 
+import myVideo from "/Users/User/Documents/fyp/feb_test_interfaces/cinna_short/floating_subtitles_bbox.mp4";
+
 interface ResultsStageProps {
 	getValues: UseFormGetValues<FormInputs>;
 	nextStage: () => void;
@@ -62,14 +64,15 @@ export function ResultsStage({
 				<div className="col-span-2 flex items-center justify-center">
 					<AspectRatio ratio={16 / 9}>
 						<ReactPlayer
-							url={URL.createObjectURL(MOCK_RESULT.video)}
+							url={myVideo}
+							// TODO remove mock result url={URL.createObjectURL(MOCK_RESULT.video)}
 							width="100%"
 							height="100%"
 							controls={true}
 						/>
 					</AspectRatio>
 				</div>
-				<div className="col-span-1 flex flex-col gap-y-4 py-3 px-4">
+				<div className="col-span-1 flex flex-col gap-y-4 py-3 px-4 ml-2 justify-center">
 					<div className="flex flex-col gap-y-2">
 						<h1 className="text-3xl font-bold">
 							Thank you for trying this demo!
@@ -105,7 +108,7 @@ export function ResultsStage({
 				</div>
 			</div>
 			<Button
-				className="w-fit my-2 self-end"
+				className="w-fit my-3 self-end"
 				type="reset"
 				onClick={() => {
 					resetForm();
