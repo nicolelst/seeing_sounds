@@ -2,17 +2,11 @@ import { ReactElement } from "react";
 import { UseFormGetValues } from "react-hook-form";
 import ReactPlayer from "react-player";
 import { AspectRatio } from "@/shadcn/components/ui/aspect-ratio";
-import {
-	Avatar,
-	AvatarFallback,
-	AvatarImage,
-} from "@/shadcn/components/ui/avatar";
-import { ScrollArea } from "@/shadcn/components/ui/scroll-area";
 import { Button } from "@/shadcn/components/ui/button";
 import { FileTextIcon, VideoIcon } from "@radix-ui/react-icons";
 import { FormInputs } from "@/types/formInputs";
 import { annotationTypeMap } from "@/types/annotationType";
-import { DEFAULT_HEX_10 } from "@/types/colourInfo";
+import SpeakerListDisplay from "./speakerListDisplay";
 
 interface ResultsStageProps {
 	getValues: UseFormGetValues<FormInputs>;
@@ -117,45 +111,5 @@ export function ResultsStage({
 				{/* TODO reset form & clear videoInput field */}
 			</Button>
 		</div>
-	);
-}
-
-interface SpeakerListDisplayProps {
-	speakers: {
-		name: string;
-		thumbnail: File;
-	}[];
-}
-function SpeakerListDisplay({
-	speakers,
-}: SpeakerListDisplayProps): ReactElement {
-	return (
-		<ScrollArea
-			className={`${speakers.length > 3 ? "h-36" : "h-fit"} px-2`}
-		>
-			{/* TODO dynamic height ? */}
-			{speakers.map((speaker, idx) => (
-				<div className="flex flex-row space-x-4 items-center mb-2">
-					<Avatar
-						className="h-16 w-16 border-solid border-4"
-						style={{ borderColor: DEFAULT_HEX_10[idx] }}
-						// TODO use speaker colour
-					>
-						{/* <AvatarImage src="https://github.com/shadcn.png" /> */}
-						<AvatarImage
-							src={URL.createObjectURL(speaker.thumbnail)}
-						/>
-						<AvatarFallback
-							style={{ backgroundColor: DEFAULT_HEX_10[idx] }}
-							// TODO use speaker colour
-							className="text-white text-lg"
-						>
-							{idx + 1}
-						</AvatarFallback>
-					</Avatar>
-					<em>{speaker.name}</em>
-				</div>
-			))}
-		</ScrollArea>
 	);
 }
