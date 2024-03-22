@@ -47,6 +47,7 @@ SettingsStageProps): ReactElement {
 					<div className="flex flex-col gap-4">
 						<SettingItem
 							label="Select captioning interface"
+							// description="How should captions be displayed?"
 							error={undefined}
 							// TODO add error
 						>
@@ -61,6 +62,7 @@ SettingsStageProps): ReactElement {
 						</SettingItem>
 						<SettingItem
 							label="Font size"
+							// description="How large should captions be?"
 							error={undefined}
 							// TODO add error
 						>
@@ -72,6 +74,7 @@ SettingsStageProps): ReactElement {
 						</SettingItem>
 						<SettingItem
 							label="Caption text colour"
+							// description="What colour should caption text be?"
 							error={undefined}
 							// TODO add error
 						>
@@ -91,6 +94,7 @@ SettingsStageProps): ReactElement {
 						</SettingItem>
 						<SettingItem
 							label="Speaker colours"
+							// description="Click to select colours for each speaker."
 							error={undefined}
 							// TODO add error
 						>
@@ -107,7 +111,8 @@ SettingsStageProps): ReactElement {
 				>
 					<div className="flex flex-col gap-4">
 						<SettingItem
-							label="Speaker names TODO"
+							label="Setting"
+							// description="desc"
 							error={undefined}
 							// errors.numSpeakers
 						>
@@ -126,6 +131,7 @@ SettingsStageProps): ReactElement {
 					<div className="flex flex-col gap-4">
 						<SettingItem
 							label="Setting"
+							// description="desc"
 							error={undefined}
 							// errors.numSpeakers
 						>
@@ -144,6 +150,7 @@ SettingsStageProps): ReactElement {
 					<div className="flex flex-col gap-4">
 						<SettingItem
 							label="Setting"
+							// description="desc"
 							error={undefined}
 							// errors.numSpeakers
 						>
