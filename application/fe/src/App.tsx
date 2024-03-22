@@ -31,7 +31,6 @@ function App() {
 		formState: { errors },
 	} = useForm<FormInputs>({
 		defaultValues: {
-			numSpeakers: 6, // TODO remove when validation is in for numSpeakers
 			annotationType: "floating",
 			fontSize: 24,
 			captionBlackText: false,
@@ -59,6 +58,7 @@ function App() {
 								videoFilepath={videoFilepath}
 								setVideoFilepath={setVideoFilepath}
 								register={register}
+								watch={watch}
 								getValues={getValues}
 								setValue={setValue}
 								trigger={trigger}

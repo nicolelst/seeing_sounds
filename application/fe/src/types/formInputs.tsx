@@ -7,6 +7,9 @@ export type FormInputs = {
 	annotationType: annotationType;
 	fontSize: number;
 	captionBlackText: boolean;
-	speakerColours: Array<RGBString>
+	speakerColours: Array<RGBString>;
 	// TODO add settings
 };
+
+export const NUM_SPEAKERS_MIN = 1;
+export const NUM_SPEAKERS_MAX = 10; // TODO max as per resolution and models?

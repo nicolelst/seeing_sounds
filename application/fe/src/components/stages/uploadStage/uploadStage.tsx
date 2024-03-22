@@ -7,11 +7,10 @@ import {
 	UseFormClearErrors,
 	UseFormTrigger,
 	FieldErrors,
+	UseFormWatch,
 } from "react-hook-form";
 import { AspectRatio } from "@/shadcn/components/ui/aspect-ratio";
 import { Button } from "@/shadcn/components/ui/button";
-import { Input } from "@/shadcn/components/ui/input";
-import { Label } from "@/shadcn/components/ui/label";
 import ReactPlayer from "react-player";
 import { FormInputs } from "@/types/formInputs";
 import FileDropzone from "./fileDropzone";
@@ -21,6 +20,7 @@ interface UploadStageProps {
 	videoFilepath: string;
 	setVideoFilepath: React.Dispatch<React.SetStateAction<string>>;
 	register: UseFormRegister<FormInputs>;
+	watch: UseFormWatch<FormInputs>;
 	getValues: UseFormGetValues<FormInputs>;
 	setValue: UseFormSetValue<FormInputs>;
 	trigger: UseFormTrigger<FormInputs>;
@@ -33,6 +33,7 @@ interface UploadStageProps {
 export function UploadStage({
 	videoFilepath,
 	setVideoFilepath,
+	watch,
 	register,
 	getValues,
 	setValue,
@@ -53,8 +54,9 @@ export function UploadStage({
 				<div className="col-span-1 flex flex-col h-full w-full gap-y-4">
 					<FileDropzone
 						errors={errors}
+						register={register}
 						setValue={setValue}
-						// getValues={getValues}
+						getValues={getValues}
 						setError={setError}
 						clearErrors={clearErrors}
 						videoFilepath={videoFilepath}
@@ -72,39 +74,6 @@ export function UploadStage({
 									controls={true}
 								/>
 							</AspectRatio>
-							<div className="flex flex-row gap-10 my-4">
-								<Label
-									className={`text-lg text-nowrap px-2 ${
-										errors.numSpeakers
-											? "text-red-600"
-											: "text-black"
-									}`}
-								>
-									{errors.numSpeakers
-										? errors.numSpeakers.message
-										: "How many speakers are in the video?"}
-								</Label>
-								<Input
-									className={`${
-										errors.numSpeakers
-											? "bg-red-200"
-											: "bg-white"
-									}`}
-									{...register("numSpeakers", {
-										required: true,
-										valueAsNumber: true,
-										min: 1,
-										max: 10,
-										// TODO max as per resolution and models?
-										// TODO reject decimals, letters
-										// TODO prevent next without this value
-										// setValueAs: v => parseInt(v),
-										// onChange: (e) => {
-										//   return e.target.value.replace(/[^1-9]/g, '');
-										// },
-									})}
-								/>
-							</div>
 						</div>
 					) : (
 						<Instructions />
@@ -115,8 +84,9 @@ export function UploadStage({
 				className="w-fit my-2 self-end"
 				onClick={handleNext}
 				disabled={
-					!getValues("videoInput") ||
+					!watch("videoInput") ||
 					errors.videoInput ||
+					!watch("numSpeakers") ||
 					errors.numSpeakers
 				}
 			>
