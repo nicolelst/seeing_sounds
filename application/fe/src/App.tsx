@@ -19,10 +19,16 @@ function App() {
 		setFormStageNum((formStageNum % formStageNames.length) + 1);
 	}
 
+	function resetForm() {
+		reset(undefined, { keepDefaultValues: true });
+		setVideoFilepath("");
+	}
+
 	const {
 		register,
 		handleSubmit,
 		setValue,
+		reset,
 		resetField,
 		getValues,
 		watch,
@@ -79,10 +85,9 @@ function App() {
 							/>
 						) : formStageNum === 3 ? (
 							<ResultsStage
-								// register={register}
 								getValues={getValues}
-								// errors={errors}
 								nextStage={nextStage}
+								resetForm={resetForm}
 							/>
 						) : (
 							<InvalidStage />

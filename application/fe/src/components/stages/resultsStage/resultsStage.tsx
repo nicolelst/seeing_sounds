@@ -3,7 +3,7 @@ import { UseFormGetValues } from "react-hook-form";
 import ReactPlayer from "react-player";
 import { AspectRatio } from "@/shadcn/components/ui/aspect-ratio";
 import { Button } from "@/shadcn/components/ui/button";
-import { FileTextIcon, VideoIcon } from "@radix-ui/react-icons";
+import { Pencil2Icon, VideoIcon } from "@radix-ui/react-icons";
 import { FormInputs } from "@/types/formInputs";
 import { annotationTypeMap } from "@/types/annotationType";
 import SpeakerListDisplay from "./speakerListDisplay";
@@ -11,11 +11,13 @@ import SpeakerListDisplay from "./speakerListDisplay";
 interface ResultsStageProps {
 	getValues: UseFormGetValues<FormInputs>;
 	nextStage: () => void;
+	resetForm: () => void;
 }
 
 export function ResultsStage({
 	getValues,
 	nextStage,
+	resetForm,
 }: ResultsStageProps): ReactElement {
 	// TODO remove mock, replace w api response
 	const MOCK_RESULT = {
@@ -96,7 +98,7 @@ export function ResultsStage({
 							Get video
 						</Button>
 						<Button className="py-6 text-md">
-							<FileTextIcon className="mr-2 h-5 w-5" />
+							<Pencil2Icon className="mr-2 h-5 w-5" />
 							Get transcript
 						</Button>
 					</div>
@@ -105,7 +107,10 @@ export function ResultsStage({
 			<Button
 				className="w-fit my-2 self-end"
 				type="reset"
-				onClick={nextStage}
+				onClick={() => {
+					resetForm();
+					nextStage();
+				}}
 			>
 				Start over
 				{/* TODO reset form & clear videoInput field */}
