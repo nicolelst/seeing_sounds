@@ -25,31 +25,13 @@ export function ResultsStage({
 	const MOCK_RESULT = {
 		filename: getValues("videoInput")[0].name,
 		annotationType: getValues("annotationType"),
-		speakers: [
-			{
-				name: "Speaker 1",
-				thumbnail: new File([""], "image_one"),
-			},
-			{
-				name: "Speaker 2",
-				thumbnail: new File([""], "image_two"),
-			},
-			{
-				name: "Speaker 3",
-				thumbnail: new File([""], "image_three"),
-			},
-			{
-				name: "Speaker 4",
-				thumbnail: new File([""], "image_four"),
-			},
-			{
-				name: "Speaker 5",
-				thumbnail: new File([""], "image_five"),
-			},
-			{
-				name: "Speaker 6",
-				thumbnail: new File([""], "image_six"),
-			},
+		speakerThumbnails: [
+			new File([""], "image_one"),
+			new File([""], "image_two"),
+			new File([""], "image_three"),
+			new File([""], "image_four"),
+			new File([""], "image_five"),
+			new File([""], "image_six"),
 		],
 		video: new File([""], "video_out"),
 		transcript: new File([""], "transcript_out"),
@@ -87,10 +69,13 @@ export function ResultsStage({
 						</p>
 						<div className="flex flex-col gap-y-2">
 							<p>
-								<b>Speakers </b>({MOCK_RESULT.speakers.length}):
+								<b>Speakers </b>(
+								{MOCK_RESULT.speakerThumbnails.length}):
 							</p>
 							<SpeakerListDisplay
-								speakers={MOCK_RESULT.speakers}
+								speakerThumbnails={
+									MOCK_RESULT.speakerThumbnails
+								}
 							/>
 						</div>
 					</div>
