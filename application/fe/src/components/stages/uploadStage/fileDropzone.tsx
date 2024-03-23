@@ -28,7 +28,7 @@ interface FileDropzoneProps {
 	register: UseFormRegister<FormInputs>;
 	getValues: UseFormGetValues<FormInputs>;
 	setValue: UseFormSetValue<FormInputs>;
-	resetField: UseFormResetField<FormInputs>
+	resetField: UseFormResetField<FormInputs>;
 	setError: UseFormSetError<FormInputs>;
 	clearErrors: UseFormClearErrors<FormInputs>;
 	videoFilepath: string;
@@ -57,7 +57,8 @@ export default function FileDropzone({
 				// TODO add more valid formats
 				setError("videoInput", {
 					type: "dropType",
-					message: "Invalid video format.",
+					message:
+						"Invalid video format. Please upload another file.",
 				});
 				resetField("numSpeakers");
 			} else {
@@ -171,7 +172,7 @@ function NumSpeakersInput({
 					type="button"
 					className={`${
 						getValues("numSpeakers") === NUM_SPEAKERS_MIN
-							? "cursor-not-allowed"
+							? "cursor-not-allowed text-slate-400 hover:text-slate-400 bg-slate-100 hover:bg-slate-100"
 							: ""
 					}`}
 					onClick={(e: Event) => {
@@ -234,7 +235,7 @@ function NumSpeakersInput({
 					type="button"
 					className={`${
 						getValues("numSpeakers") === NUM_SPEAKERS_MAX
-							? "cursor-not-allowed"
+							? "cursor-not-allowed text-slate-400 hover:text-slate-400 bg-slate-100 hover:bg-slate-100"
 							: ""
 					}`}
 					onClick={(e: Event) => {
