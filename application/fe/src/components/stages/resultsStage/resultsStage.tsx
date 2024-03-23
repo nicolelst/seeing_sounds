@@ -3,12 +3,13 @@ import { UseFormGetValues } from "react-hook-form";
 import ReactPlayer from "react-player";
 import { AspectRatio } from "@/shadcn/components/ui/aspect-ratio";
 import { Button } from "@/shadcn/components/ui/button";
-import { Pencil2Icon, VideoIcon } from "@radix-ui/react-icons";
+import { VideoIcon } from "@radix-ui/react-icons";
 import { FormInputs } from "@/types/formInputs";
 import { annotationTypeMap } from "@/types/annotationType";
 import SpeakerListDisplay from "./speakerListDisplay";
 
 import myVideo from "/Users/User/Documents/fyp/feb_test_interfaces/cinna_short/floating_subtitles_bbox.mp4";
+import GetTranscriptButton from "./getTranscriptButton";
 
 interface ResultsStageProps {
 	getValues: UseFormGetValues<FormInputs>;
@@ -79,16 +80,15 @@ export function ResultsStage({
 							/>
 						</div>
 					</div>
-					<div className="grid grid-cols-2 space-x-2">
+					<div className="grid grid-cols-2 space-x-2 mt-2">
 						{/* TODO download files */}
 						<Button className="py-6 text-md">
 							<VideoIcon className="mr-2 h-5 w-5" />
 							Get video
 						</Button>
-						<Button className="py-6 text-md">
-							<Pencil2Icon className="mr-2 h-5 w-5" />
-							Get transcript
-						</Button>
+						<GetTranscriptButton
+							speakerThumbnails={MOCK_RESULT.speakerThumbnails}
+						/>
 					</div>
 				</div>
 			</div>

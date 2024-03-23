@@ -45,7 +45,10 @@ SettingsStageProps): ReactElement {
 				defaultValue="video"
 				className="w-full h-full max-w-2xl mx-auto"
 			>
-				<SettingsAccordionItem value="video" header="Video annotation settings">
+				<SettingsAccordionItem
+					value="video"
+					header="Video annotation settings"
+				>
 					<div className="flex flex-col gap-4">
 						<SettingItem
 							label="Select captioning interface"
@@ -107,7 +110,7 @@ SettingsStageProps): ReactElement {
 						</SettingItem>
 					</div>
 				</SettingsAccordionItem>
-				<SettingsAccordionItem
+				{/* <SettingsAccordionItem
 					value="transcript"
 					header="Video transcript settings"
 				>
@@ -125,7 +128,7 @@ SettingsStageProps): ReactElement {
 							/>
 						</SettingItem>
 					</div>
-				</SettingsAccordionItem>
+				</SettingsAccordionItem> */}
 				<SettingsAccordionItem
 					value="speechSep"
 					header="Speech separation model parameters"
@@ -165,9 +168,10 @@ SettingsStageProps): ReactElement {
 					</div>
 				</SettingsAccordionItem>
 			</Accordion>
-			<Button className="w-fit my-3 self-end" 
-			onClick={handleNext}
-			// type="submit"
+			<Button
+				className="w-fit my-3 self-end"
+				onClick={handleNext}
+				// type="submit"
 			>
 				{/* TODO post request */}
 				Next
