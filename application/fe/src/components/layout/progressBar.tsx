@@ -54,7 +54,11 @@ function StageDisplay({
 	return (
 		<div className="flex flex-col justify-center items-center gap-2">
 			<Button
-				className={`rounded-full w-20 h-20 text-3xl font-semibold ${ disabled ? 'bg-gray-400 hover:bg-gray-400' : 'bg-slate-900 hover:bg-slate-900' }`}
+				className={`rounded-full w-20 h-20 text-3xl ${
+					disabled
+						? "bg-gray-400 hover:bg-gray-400"
+						: "bg-slate-900 hover:bg-slate-900"
+				}`}
 				onClick={onClick}
 				disabled={disabled}
 				type="button"
