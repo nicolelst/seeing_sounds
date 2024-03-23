@@ -24,7 +24,7 @@ export default function GetTranscriptButton({
 	return (
 		<Dialog>
 			<DialogTrigger>
-				<Button className="py-6 text-md">
+				<Button className="py-6 text-md w-full">
 					<Pencil2Icon className="mr-2 h-5 w-5" />
 					Get transcript
 				</Button>
