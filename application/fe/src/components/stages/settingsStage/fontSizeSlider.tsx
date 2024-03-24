@@ -21,7 +21,7 @@ export default function FontSizeSlider({
 	const fontSizeMap: Record<number, [string, string]> = {
 		18: ["text-sm", "Small"],
 		24: ["text-base", "Default"],
-		30: ["text-lg", "Large"],
+		30: ["text-xl", "Large"],
 		36: ["text-2xl", "Giant"],
 	};
 
