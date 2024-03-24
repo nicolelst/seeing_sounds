@@ -7,7 +7,7 @@ import {
 
 interface SpeakerAvatarProps {
 	colour: string;
-	img: File;
+	img?: string;
 	id: number;
 	className?: string;
 }
@@ -25,7 +25,7 @@ export default function SpeakerAvatar({
 			// TODO use speaker colour
 		>
 			{/* <AvatarImage src="https://github.com/shadcn.png" /> */}
-			<AvatarImage src={URL.createObjectURL(img)} />
+			<AvatarImage src={img} />
 			<AvatarFallback
 				style={{ backgroundColor: colour }}
 				// TODO use speaker colour

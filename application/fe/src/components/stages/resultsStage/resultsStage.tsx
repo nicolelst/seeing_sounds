@@ -8,7 +8,7 @@ import { FormInputs } from "@/types/formInputs";
 import { annotationTypeMap } from "@/types/annotationType";
 import SpeakerListDisplay from "./speakerListDisplay";
 
-import myVideo from "/Users/User/Documents/fyp/feb_test_interfaces/cinna_short/floating_subtitles_bbox.mp4";
+import myVideo from "/Users/User/Documents/fyp/report_moist/outputs/floating_bbox.mp4";
 import GetTranscriptButton from "./getTranscriptButton";
 
 interface ResultsStageProps {
@@ -71,7 +71,8 @@ export function ResultsStage({
 						<div className="flex flex-col gap-y-2">
 							<p>
 								<b>Speakers </b>(
-								{MOCK_RESULT.speakerThumbnails.length}):
+								{2}):
+								{/* {MOCK_RESULT.speakerThumbnails.length}): */}
 							</p>
 							<SpeakerListDisplay
 								speakerThumbnails={

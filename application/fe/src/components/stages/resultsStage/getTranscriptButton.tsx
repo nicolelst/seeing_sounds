@@ -15,6 +15,9 @@ import { Pencil2Icon } from "@radix-ui/react-icons";
 import { DEFAULT_HEX_10 } from "@/types/colourInfo";
 import SpeakerAvatar from "./speakerAvatar";
 
+import img1 from "/Users/User/Documents/fyp/report_moist/faces/speaker1_best.png";
+import img2 from "/Users/User/Documents/fyp/report_moist/faces/speaker2_best.png";
+
 interface GetTranscriptButtonProps {
 	speakerThumbnails: File[];
 }
@@ -53,13 +56,14 @@ function SpeakerInfoDialog({
 			</DialogHeader>
 			<div className="flex flex-col gap-y-2 max-h-96 overflow-y-auto px-2">
 				{/* TODO dynamic height ? */}
-				{speakerThumbnails.map((img, idx) => (
+				{/* {speakerThumbnails.map((img, idx) => ( */}
+				{[img1, img2].map((img, idx) => (
 					<div
 						key={idx + 1}
 						className="flex flex-row gap-x-6 items-center"
 					>
 						<SpeakerAvatar
-							colour={DEFAULT_HEX_10[idx]}
+							colour={["#E05454", "#4D74AE"][idx]} //{DEFAULT_HEX_10[idx]}
 							// TODO use speaker colour
 							img={img}
 							id={idx + 1}
