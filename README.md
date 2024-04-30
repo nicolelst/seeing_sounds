@@ -5,6 +5,14 @@ Final Year Project submitted to the School of Computer Science and Engineering o
 // TODO: attach link to demo video
 
 ## Running the application 
+Run backend on http://localhost:8000
+View Swagger UI on http://localhost:8000/docs 
+```
+cd application/be/endpoints
+uvicorn main:app --reload
+```
+
+Run frontend on http://localhost:5173/
 ```
 cd application/fe
 pnpm run dev
