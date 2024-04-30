@@ -1,0 +1,4 @@
+application/be/endpoints/temp
+application/be/checkpoints
+application/be/video_processing/VisualVoice/checkpoints/*
+TODO.md
