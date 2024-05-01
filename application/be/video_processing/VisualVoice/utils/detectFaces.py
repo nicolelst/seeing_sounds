@@ -158,23 +158,12 @@ def main():
     csvfile.close()
 
 
-    # save dics for ref
-    with open(os.path.join(args.output_path, "landmarks.txt"), "w") as outfile: 
-        outfile.write(str(landmarks_dic))
-    
-    with open(os.path.join(args.output_path, "faces.txt"), "w") as outfile: 
-        outfile.write(str(faces_dic))
-    
-    with open(os.path.join(args.output_path, "boxes.txt"), "w") as outfile: 
-        outfile.write(str(boxes_dic))
-    
+    # save bbox results for video annotation use
     bbox_path = os.path.join(args.output_path, 'bbox')
     if not os.path.exists(bbox_path):
         os.mkdir(bbox_path)
     for id in boxes_dic:
         utils.save2npz(os.path.join(bbox_path, 'speaker' + str(id+1)+'.npz'), data=boxes_dic[id])
-        # with open(os.path.join(bbox_path, f"boxes_speaker{id+1}.txt"), "w") as outfile: 
-        #     outfile.write(str(boxes_dic[id]))
 
 
 if __name__ == '__main__':

@@ -154,7 +154,7 @@ def main():
 			for i in range(10): # TODO why 10
 				frame = load_frame(facetrack_path)
 				boxes, scores = mtcnn.detect(frame)
-				if scores[0] > best_score:
+				if scores[0] != None and scores[0] > best_score:
 					best_frame = frame	
 					best_score = scores[0] # TODO why was this missing 
 			best_frame.save(facetrack_path[:-4]+"_best.png", "PNG")
