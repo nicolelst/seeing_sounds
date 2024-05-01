@@ -5,6 +5,56 @@ Final Year Project submitted to the School of Computer Science and Engineering o
 
 // TODO: attach link to demo video
 
+
+## Frontend (React JS)
+*see application/fe*
+
+Web page developed with [React Vite](https://vitejs.dev/) using components from [shadcn/ui](https://ui.shadcn.com/)
+
+
+## Backend (Python)
+*see application/be*
+
+Backend built with [FastAPI](https://fastapi.tiangolo.com/) in Python 3.8.9.
+
+Install requirements for FastAPI
+```
+pip install fastapi
+pip install python-multipart
+pip install "uvicorn[standard]"
+```
+
+Install requirements for speech separation with VisualVoice
+```
+brew install ffmpeg
+
+pip install face-alignment 
+pip install facenet-pytorch
+pip install h5py
+pip install av
+
+pip install -U openmim
+mim install mmcv
+```
+
+Download VisualVoice pretrained models into `application/be/video_processing/VisualVoice/pretrained_models`.
+(based on instructions [here](https://github.com/facebookresearch/VisualVoice?tab=readme-ov-file#demo-with-the-pre-trained-models))
+```
+cd application/be/video_processing/VisualVoice/pretrained_models
+wget http://dl.fbaipublicfiles.com/VisualVoice/av-speech-separation-model/facial_best.pth
+wget http://dl.fbaipublicfiles.com/VisualVoice/av-speech-separation-model/lipreading_best.pth
+wget http://dl.fbaipublicfiles.com/VisualVoice/av-speech-separation-model/unet_best.pth
+wget http://dl.fbaipublicfiles.com/VisualVoice/av-speech-separation-model/vocal_best.pth
+```
+
+
+Install requirements for speech recognition with Whisper
+```
+pip install setuptools-rust
+pip install -U openai-whisper
+```
+
+
 ## Running the application 
 Run backend on http://localhost:8000
 View Swagger UI on http://localhost:8000/docs 
@@ -19,41 +69,6 @@ cd application/fe
 pnpm run dev
 ```
 
-
-## Frontend (React JS)
-*see application/fe*
-
-Web page developed with [React Vite](https://vitejs.dev/) using components from [shadcn/ui](https://ui.shadcn.com/)
-
-
-## Backend (Python)
-*see application/be*
-
-Backend built with [FastAPI](https://fastapi.tiangolo.com/) in Python 3.8.9.
-```
-pip install fastapi
-pip install python-multipart
-pip install "uvicorn[standard]"
-```
-
-For speech separation with VisualVoice
-```
-brew install ffmpeg
-
-pip install face-alignment 
-pip install facenet-pytorch
-pip install h5py
-pip install av
-
-pip install -U openmim
-mim install mmcv
-```
-
-For speech recognition with Whisper
-```
-pip install setuptools-rust
-pip install -U openai-whisper
-```
 
 ## System flow
 Input: video file of multiple speakers
