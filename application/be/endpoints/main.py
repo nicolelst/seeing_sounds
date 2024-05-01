@@ -1,15 +1,17 @@
 import aiofiles
-from fastapi import FastAPI, HTTPException, UploadFile
 import os
+import sys
 from threading import Thread
 from typing import Union
 import uuid
 
-import sys
+from fastapi import FastAPI, HTTPException, UploadFile
+from fastapi.responses import FileResponse
+
 sys.path.insert(0, '..')
 from utils.annotation_types import AnnotationInterface
 from utils.path_constants import STORAGE_DIR
-from utils.video_name_constants import get_input_video_filename
+from utils.video_name_constants import get_input_video_filename, get_output_video_filename
 from utils.video_settings import VideoSettings
 from video_processing.process_video import process_video
 
@@ -20,7 +22,7 @@ app = FastAPI()
 def read_root():
     return {"Hello": "World"}
 
-@app.post("/uploadvideo/", status_code=202)
+@app.post("/upload_video/", status_code=202)
 async def upload_video(video: UploadFile, annotation_type: AnnotationInterface, num_speakers: int, colour_list_str: Union[str, None] = ""):
     # https://fastapi.tiangolo.com/tutorial/request-files/ 
     # settings in query params, video file in request body - https://github.com/tiangolo/fastapi/issues/2257#issuecomment-717522156
@@ -73,3 +75,23 @@ async def upload_video(video: UploadFile, annotation_type: AnnotationInterface, 
     # TODO error codes if any issues
 
     return {"request_id": request_id, "filename": video.filename, "filetype": video.content_type, "settings": video_settings}
+
+
+@app.get("/download_annotated/")
+async def get_annotated_video(request_id: str):
+    video_filepath = get_output_video_filename(request_id)
+    # TODO invalid ID vs not yet ready result
+    if video_filepath == None:
+        raise HTTPException(status_code=400, detail=f"Invalid request ID: No output video found for [{request_id}]")
+
+    response = FileResponse(
+        path = video_filepath,
+        headers = {
+            "request_id": request_id, 
+            "content-disposition": "attachment", 
+            "content-type": "video/mp4"
+        },
+        media_type = "video/mp4",
+        filename = "annotated_video.mp4"
+    )
+    return response

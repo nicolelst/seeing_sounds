@@ -13,9 +13,9 @@ def process_video(request_dir, input_video_filename, video_settings: VideoSettin
 	input_video_filepath = os.path.join(request_dir, input_video_filename)
 	preproc_video_filename, preproc_audio_filename = get_preprocessed_filenames(input_video_filename)
 
-	logs_output_dir = os.path.join(request_dir, "logs")
-	transcript_output_dir = os.path.join(request_dir, "transcripts")
-	final_output_dir = os.path.join(request_dir, "outputs")
+	logs_output_dir = os.path.join(request_dir, LOGS_FOLDER)
+	transcript_output_dir = os.path.join(request_dir, TRANSCRIPT_FOLDER)
+	final_output_dir = os.path.join(request_dir, OUTPUT_FOLDER)
 	for dir in [logs_output_dir, transcript_output_dir, final_output_dir]:
 		if not os.path.exists(dir):
 			os.makedirs(dir, exist_ok=True)
