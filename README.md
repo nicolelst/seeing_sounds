@@ -56,14 +56,24 @@ pip install -U openai-whisper
 
 
 ## Running the application 
+Port numbers are specified in [port_config.json](./application/port_config.json).
+
+### Run using bash script 
+These commands were tested on a Mac zsh terminal.
+```
+sudo chmod +x application/run_application.sh
+./application/run_application.sh
+```
+
+### Run manually
 Run backend on http://localhost:8000
 View Swagger UI on http://localhost:8000/docs 
 ```
 cd application/be/endpoints
-uvicorn main:app --reload
+uvicorn main:app --reload --port 8000
 ```
 
-Run frontend on http://localhost:5173/
+Run frontend on http://localhost:8001/
 ```
 cd application/fe
 pnpm run dev

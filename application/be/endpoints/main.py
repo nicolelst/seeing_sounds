@@ -1,3 +1,4 @@
+import json
 import aiofiles
 import os
 import sys
@@ -6,7 +7,9 @@ from typing import Union
 import uuid
 
 from fastapi import FastAPI, HTTPException, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
+from pydantic.color import Color
 
 sys.path.insert(0, '..')
 from utils.annotation_types import AnnotationInterface
@@ -17,6 +20,25 @@ from video_processing.process_video import process_video
 
 
 app = FastAPI()
+
+# add CORS middleware to resolve “No Access-Control-Allow-Origin header” 
+# https://fastapi.tiangolo.com/tutorial/cors/
+port_config = json.load(open("../../port_config.json", "r"))
+origins = [
+    f"http://localhost:{port_config['fe']}",
+    f"http://localhost:{port_config['be']}",
+]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.get("/")
+async def main():
+    return {"message": "Hello World"}
 
 @app.get("/")
 def read_root():
@@ -34,7 +56,12 @@ async def upload_video(video: UploadFile, annotation_type: AnnotationInterface, 
     # parse settings
     colour_list = [x.strip() for x in colour_list_str.split(";")]
     if annotation_type != AnnotationInterface.TRADITIONAL and len(colour_list) < num_speakers:
-        raise HTTPException(status_code=400, detail=f"Insufficient colours ({len(colour_list)}) specified for {num_speakers} speakers: {video.content_type}")
+        raise HTTPException(status_code=400, detail=f"Insufficient colours ({len(colour_list)}) specified for {num_speakers} speakers: {video.colour_list}")
+    try: 
+        colour_list = [Color(c) for c in colour_list]
+    except: 
+        raise HTTPException(status_code=400, detail=f"Error parsing colours: {colour_list}")
+
     video_settings = VideoSettings(annotation_type=annotation_type, colour_list=colour_list, num_speakers=num_speakers)
 
     # assign request ID and create directory
