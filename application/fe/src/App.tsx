@@ -69,6 +69,7 @@ function App() {
     const result = await response.json();
 
     if (response.ok) {
+			// TODO creat websocket
       console.log("REQUEST ID:", result.request_id);
       nextStage();
     } else {

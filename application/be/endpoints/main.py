@@ -1,17 +1,21 @@
 import json
+# from threading import Thread
 import aiofiles
 import os
 import sys
-from threading import Thread
 from typing import Union
 import uuid
+from waiting import wait
 
-from fastapi import FastAPI, HTTPException, UploadFile
+from fastapi import FastAPI, HTTPException, status, UploadFile, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, JSONResponse
+# from fastapi.testclient import TestClient
 from pydantic.color import Color
 
 sys.path.insert(0, '..')
+from utils.status_types import ProcessingStatus
+from endpoints.processing_thread_manager import ProcessingThreadManager
 from utils.annotation_types import AnnotationInterface
 from utils.path_constants import STORAGE_DIR
 from utils.video_name_constants import get_input_video_filename, get_output_video_filename
@@ -20,6 +24,7 @@ from video_processing.process_video import process_video
 
 
 app = FastAPI()
+proc_thread_mgr = ProcessingThreadManager()
 
 # add CORS middleware to resolve “No Access-Control-Allow-Origin header” 
 # https://fastapi.tiangolo.com/tutorial/cors/
@@ -47,16 +52,16 @@ async def upload_video(video: UploadFile, annotation_type: AnnotationInterface, 
 
     # request validation
     if not video.content_type.startswith("video/"):
-        raise HTTPException(status_code=400, detail=f"Invalid filetype: {video.content_type} not a valid video format")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Invalid filetype: {video.content_type} not a valid video format")
     
     # parse settings
     colour_list = [x.strip() for x in colour_list_str.split(";")]
     if annotation_type != AnnotationInterface.TRADITIONAL and len(colour_list) < num_speakers:
-        raise HTTPException(status_code=400, detail=f"Insufficient colours ({len(colour_list)}) specified for {num_speakers} speakers: {video.colour_list}")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Insufficient colours ({len(colour_list)}) specified for {num_speakers} speakers: {video.colour_list}")
     try: 
         colour_list = [Color(c) for c in colour_list]
     except: 
-        raise HTTPException(status_code=400, detail=f"Error parsing colours: {colour_list}")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Error parsing colours: {colour_list}")
 
     video_settings = VideoSettings(annotation_type=annotation_type, colour_list=colour_list, num_speakers=num_speakers)
 
@@ -81,31 +86,108 @@ async def upload_video(video: UploadFile, annotation_type: AnnotationInterface, 
         while content := await video.read(1024):  
             await out_file.write(content)  
     
-    video_proc_thread = Thread(
-        name = request_id, 
-        target = process_video, 
+    proc_thread_mgr.add(
+        request_id= request_id,
+        processing_func= process_video,
         kwargs = {
             "request_dir": request_dir, 
             "input_video_filename": save_filename, 
             "video_settings": video_settings
-        },
-        daemon = True
+        }
     )
-    print(f"[{request_id}] starting video processing")
-    video_proc_thread.start()
-    # TODO websocket
-    # TODO request_dir monitoring thread
-    # TODO error codes if any issues
+    
+    # def test_websocket(id):
+    #     client = TestClient(app)
+    #     print(">> start testing websocket: id = ", id)
+    #     with client.websocket_connect(f"/ws/{id}") as websocket:
+    #         while True: 
+    #             data = websocket.receive_json()
+    #             print(">> testing websocket: id = ", id, "data =", data)
+    #             if data["status"] == ProcessingStatus.COMPLETE:
+    #                 break
+    #     print(">> end testing websocket: id = ", id)
+    # test_thread = Thread(name="test_websocket", target=test_websocket, args=[request_id], daemon=True)
+    # test_thread.start()
 
     return {"request_id": request_id, "filename": video.filename, "filetype": video.content_type, "settings": video_settings}
 
 
+@app.websocket("/ws/{request_id}")
+async def websocket_endpoint(websocket: WebSocket, request_id: str):
+    await websocket.accept()
+    if proc_thread_mgr.is_valid(request_id): 
+        print(f"[{request_id}] websocket created")
+    else:
+        print(f"[{request_id}] invalid request_id - websocket closed")
+        # websocket status codes: https://datatracker.ietf.org/doc/html/rfc6455#section-7.4
+        websocket.close(code=1000, reason=f"Invalid request_id [{request_id}]")
+        return
+
+    try: 
+        prev_status = proc_thread_mgr.get_status(request_id)
+        while True: 
+            wait(
+                lambda: prev_status != proc_thread_mgr.get_status(request_id), 
+                sleep_seconds = 5, # how often to poll predicate
+            )
+            status = proc_thread_mgr.get_status(request_id)
+            if status == ProcessingStatus.ERROR: 
+                error_msg = proc_thread_mgr.get_error_msg(request_id)
+                print(f"[{request_id}] reporting error [{error_msg}] via websocket")
+                msg = {
+                    "request_id": request_id,
+                    "status": status,
+                    "message": error_msg
+                }
+            else: 
+                print(f"[{request_id}] updating status {status} via websocket")
+                msg = {
+                    "request_id": request_id,
+                    "status": status
+                }
+            await websocket.send_json(msg)
+            prev_status = status
+    except WebSocketDisconnect as d:
+        print(f"[{request_id}] websocket disconnected by client ({d.code}, {d.reason})")
+        
+
 @app.get("/download_annotated/")
 async def get_annotated_video(request_id: str):
+    # HTTP problem details JSON format as per https://www.rfc-editor.org/rfc/rfc7807#section-3.1
+    if not proc_thread_mgr.is_valid(request_id):
+        # invalid request id
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invalid request_id. The server has never received a request with ID [{request_id}].")
+    
+    if proc_thread_mgr.is_in_progress(request_id):
+        # request still in progress
+        return JSONResponse(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE, 
+            content = {
+                "type": "URI", 
+                "title": "Service Unavailable", 
+                "status": 503,
+                "detail": f"Video processing in progress. The server is still processing the request with ID [{request_id}] (status = {proc_thread_mgr.get_status(request_id)}). Please try again later.", 
+            },
+            headers = {
+                "Retry-After": 60 # retry in 1 minute
+            }
+        )
+    
+    if proc_thread_mgr.get_status(request_id) == ProcessingStatus.ERROR:
+        # error while processing request
+        return JSONResponse(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, 
+            content = {
+                "type": "URI", 
+                "title": "Internal Server Error", 
+                "status": 500,
+                "detail": f"{proc_thread_mgr.get_error_msg(request_id)} while processing request with ID [{request_id}]. Please create a new request with POST /upload_video.", 
+            }
+        )
+
     video_filepath = get_output_video_filename(request_id)
-    # TODO invalid ID vs not yet ready result
     if video_filepath == None:
-        raise HTTPException(status_code=400, detail=f"Invalid request ID: No output video found for [{request_id}]")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Invalid request_id. No output video found for the request with ID [{request_id}]")
 
     response = FileResponse(
         path = video_filepath,
