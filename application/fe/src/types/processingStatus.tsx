@@ -1,3 +1,4 @@
+import { CrossCircledIcon } from "@radix-ui/react-icons";
 import {
 	SendIcon,
 	PencilRulerIcon,
@@ -14,7 +15,8 @@ export type processingStatus =
 	| "SPEECH_SEP"
 	| "SPEECH_REC"
 	| "ANNOTATION"
-	| "COMPLETE";
+	| "COMPLETE"
+	| "ERROR";
 
 export type processingStatusInfo = {
 	name: string;
@@ -57,5 +59,10 @@ export const processingStatusMap: Record<
 		name: "Almost there...",
 		desc: "Applying the final touches...",
 		icon: <WandIcon className={iconClassName} />,
+	},
+	ERROR: {
+		name: "Error",
+		desc: "An error occurred while processing your request. Please try again.",
+		icon: <CrossCircledIcon className={iconClassName} />,
 	},
 };
