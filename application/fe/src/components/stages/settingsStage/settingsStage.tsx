@@ -26,8 +26,13 @@ interface SettingsStageProps {
 	errors: FieldErrors<FormInputs>;
 }
 
+// TODO: Warning: validateDOMNesting(...): <button> cannot appear as a descendant of <button>. 
+// for all settings except font slider ???
+// type="button": https://github.com/shadcn-ui/ui/issues/2358
+// asChild: https://github.com/shadcn-ui/ui/issues/2764
+
 export function SettingsStage({
-	handleNext,
+	// handleNext,
 	// register,
 	getValues,
 	setValue,
@@ -170,10 +175,9 @@ SettingsStageProps): ReactElement {
 			</Accordion>
 			<Button
 				className="w-fit my-3 self-end"
-				onClick={handleNext}
-				// type="submit"
+				// onClick={handleNext}
+				type="submit"
 			>
-				{/* TODO post request */}
 				Next
 			</Button>
 		</div>

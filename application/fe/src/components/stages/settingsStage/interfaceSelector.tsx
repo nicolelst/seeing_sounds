@@ -30,7 +30,7 @@ export default function InterfaceSelector({
 				setValue("annotationType", value as annotationType)
 			}
 		>
-			<SelectTrigger>
+			<SelectTrigger type="button">
 				<SelectValue placeholder="Select an interface" />
 			</SelectTrigger>
 			<SelectContent>

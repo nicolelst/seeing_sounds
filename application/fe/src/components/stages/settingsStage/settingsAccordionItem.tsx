@@ -21,7 +21,7 @@ export default function SettingsAccordionItem({
 }: SettingsAccordionItemProps): ReactElement {
 	return (
 		<AccordionItem value={value}>
-			<AccordionTrigger className="text-lg font-semibold hover:no-underline py-3">
+			<AccordionTrigger type="button" className="text-lg font-semibold hover:no-underline py-3">
 				{header}
 			</AccordionTrigger>
 			<AccordionContent className="px-1 pt-1 pb-4">

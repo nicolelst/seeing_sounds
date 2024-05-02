@@ -45,7 +45,7 @@ export default function CaptionColourInputs({
 				{Array.from({ length: getValues("numSpeakers") }).map(
 					(_item, idx) => (
 						<Popover key={idx + 1}>
-							<PopoverTrigger type="button">
+							<PopoverTrigger asChild>
 								<Badge
 									style={{ backgroundColor: hexColours[idx] }}
 									className={`rounded-full ${

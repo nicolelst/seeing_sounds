@@ -29,7 +29,7 @@ export default function SettingItem({
 			<div className="col-span-3 flex flex-col">
 				<TooltipProvider>
 					<Tooltip>
-						<TooltipTrigger>{children}</TooltipTrigger>
+						<TooltipTrigger type="button">{children}</TooltipTrigger>
 						{error && (
 							<TooltipContent
 								className={`ml-2 border text-wrap break-words hyphens-auto max-w-60 ${

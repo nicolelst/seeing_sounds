@@ -37,12 +37,8 @@ app.add_middleware(
 )
 
 @app.get("/")
-async def main():
-    return {"message": "Hello World"}
-
-@app.get("/")
 def read_root():
-    return {"Hello": "World"}
+    return {"Hello": "World", "Seeing": "Sounds"}
 
 @app.post("/upload_video/", status_code=202)
 async def upload_video(video: UploadFile, annotation_type: AnnotationInterface, num_speakers: int, colour_list_str: Union[str, None] = ""):
