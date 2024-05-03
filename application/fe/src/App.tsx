@@ -13,6 +13,7 @@ import { UPLOAD_VIDEO_URL } from "./routes";
 function App() {
   const [formStageNum, setFormStageNum] = useState(1);
   const [videoFilepath, setVideoFilepath] = useState<string>("");
+  const [requestID, setRequestID] = useState<string>("");
   // TODO num stages & names should be calculated from a list of components
   const formStageNames = ["Upload video", "Adjust settings", "Done!"];
 
@@ -69,8 +70,9 @@ function App() {
     const result = await response.json();
 
     if (response.ok) {
-			// TODO creat websocket
+			// TODO create websocket
       console.log("REQUEST ID:", result.request_id);
+			setRequestID(result.request_id);
       nextStage();
     } else {
       console.log(result);
@@ -107,7 +109,7 @@ function App() {
               />
             ) : formStageNum === 2 ? (
               <SettingsStage
-                handleNext={handleSubmit(onSubmit)}
+                // handleNext={handleSubmit(onSubmit)}
                 register={register}
                 getValues={getValues}
                 setValue={setValue}
@@ -116,6 +118,7 @@ function App() {
               />
             ) : formStageNum === 3 ? (
               <ResultsStage
+								requestID={requestID}
                 getValues={getValues}
                 nextStage={nextStage}
                 resetForm={resetForm}

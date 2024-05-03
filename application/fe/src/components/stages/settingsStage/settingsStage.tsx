@@ -18,7 +18,6 @@ import SettingsAccordionItem from "./settingsAccordionItem";
 import SettingItem from "./settingItem";
 
 interface SettingsStageProps {
-	handleNext: () => void;
 	register: UseFormRegister<FormInputs>;
 	getValues: UseFormGetValues<FormInputs>;
 	setValue: UseFormSetValue<FormInputs>;
@@ -32,7 +31,6 @@ interface SettingsStageProps {
 // asChild: https://github.com/shadcn-ui/ui/issues/2764
 
 export function SettingsStage({
-	// handleNext,
 	// register,
 	getValues,
 	setValue,
@@ -175,7 +173,6 @@ SettingsStageProps): ReactElement {
 			</Accordion>
 			<Button
 				className="w-fit my-3 self-end"
-				// onClick={handleNext}
 				type="submit"
 			>
 				Next

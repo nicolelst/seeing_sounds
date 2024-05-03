@@ -5,6 +5,7 @@ import os
 import sys
 from typing import Union
 import uuid
+from fastapi.websockets import WebSocketState
 from waiting import wait
 
 from fastapi import FastAPI, HTTPException, status, UploadFile, WebSocket, WebSocketDisconnect
@@ -114,9 +115,19 @@ async def upload_video(video: UploadFile, annotation_type: AnnotationInterface, 
 
 @app.websocket("/ws/{request_id}")
 async def websocket_endpoint(websocket: WebSocket, request_id: str):
+    print(f"[{request_id}] websocket initialised at {websocket.url}")
+
     await websocket.accept()
+    print(f"[{request_id}] websocket accepted connection from client {websocket.client}")
+
+    wait(lambda: websocket.client_state == WebSocketState.CONNECTED)
+    print(f"[{request_id}] websocket client successfully connected")
+
+    msg = await websocket.receive_text()
+    print(f"[{request_id}] websocket received text:", msg)
+
     if proc_thread_mgr.is_valid(request_id): 
-        print(f"[{request_id}] websocket created")
+        print(f"[{request_id}] websocket validated request_id")
     else:
         print(f"[{request_id}] invalid request_id - websocket closed")
         # websocket status codes: https://datatracker.ietf.org/doc/html/rfc6455#section-7.4
@@ -124,7 +135,7 @@ async def websocket_endpoint(websocket: WebSocket, request_id: str):
         return
 
     try: 
-        prev_status = proc_thread_mgr.get_status(request_id)
+        prev_status = None 
         while True: 
             wait(
                 lambda: prev_status != proc_thread_mgr.get_status(request_id), 
