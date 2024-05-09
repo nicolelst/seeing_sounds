@@ -70,9 +70,9 @@ function App() {
     const result = await response.json();
 
     if (response.ok) {
-			// TODO create websocket
+      // TODO create websocket
       console.log("REQUEST ID:", result.request_id);
-			setRequestID(result.request_id);
+      setRequestID(result.request_id);
       nextStage();
     } else {
       console.log(result);
@@ -118,7 +118,7 @@ function App() {
               />
             ) : formStageNum === 3 ? (
               <ResultsStage
-								requestID={requestID}
+                requestID={requestID}
                 getValues={getValues}
                 nextStage={nextStage}
                 resetForm={resetForm}

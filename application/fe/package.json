@@ -32,6 +32,7 @@
     "react-dropzone": "^14.2.3",
     "react-hook-form": "^7.51.0",
     "react-player": "^2.15.1",
+    "react-use-websocket": "^4.8.1",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7"
   },

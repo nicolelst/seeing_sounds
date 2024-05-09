@@ -1,5 +1,6 @@
 import { ReactElement, useEffect, useState } from "react";
 import { UseFormGetValues } from "react-hook-form";
+import useWebSocket, { ReadyState } from "react-use-websocket";
 import { Button } from "@/shadcn/components/ui/button";
 import { FormInputs } from "@/types/formInputs";
 import CompleteResults from "./completeResults";
@@ -22,30 +23,38 @@ export function ResultsStage({
 }: ResultsStageProps): ReactElement {
   // TODO set status w websocket msg updates
   const [status, setStatus] = useState<processingStatus>("RECEIVED");
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const websocketURL = `${WEBSOCKET_BASE_URL}/${encodeURIComponent(requestID)}`;
+  const { lastMessage, readyState, getWebSocket } = useWebSocket(websocketURL, {
+    share: false,
+    onOpen: () => console.log("opened websocket", websocketURL),
+    onClose: () => console.log("websocket closed"),
+    onError: (event) => console.log("websocket error", event),
+    shouldReconnect: () => isLoading, // attempt to reconnect on all close events unless complete
+  });
 
   useEffect(() => {
-    const websocketURL = WEBSOCKET_BASE_URL + encodeURIComponent(requestID);
-    const websocket = new WebSocket(websocketURL);
-    console.log("websocket URL:", websocket.url);
-    console.log("websocket state:", websocket.readyState);
+    if (lastMessage !== null) {
+      const msgData = JSON.parse(lastMessage.data);
+      setStatus(msgData.status);
+      if (msgData.status == "COMPLETE") {
+        setIsLoading(false);
+        getWebSocket()?.close(1000, "request completed");
+      }
+    }
+  }, [getWebSocket, lastMessage]);
 
-    websocket.onopen = () => {
-      console.log("websocket opened");
-      websocket.send("HELLO FROM FE");
-    };
-    websocket.onclose = () => console.log("websocket closed");
-    websocket.onerror = () => console.log("websocket error");
-    websocket.onmessage = (event) => {
-      console.log("websocket received", JSON.parse(event.data));
-      // TODO not refreshing on new messages
-      // setStatus TODO
-      // websocket.close(1000, "request completed")
-    };
-
-    // return () => {
-    //     websocket.close();
-    // };
-  }, [requestID]);
+  const connectionStatus = {
+    [ReadyState.CONNECTING]: "Connecting",
+    [ReadyState.OPEN]: "Open",
+    [ReadyState.CLOSING]: "Closing",
+    [ReadyState.CLOSED]: "Closed",
+    [ReadyState.UNINSTANTIATED]: "Uninstantiated",
+  }[readyState];
+  useEffect(() => {
+    console.log(connectionStatus);
+  }, [connectionStatus]);
 
   // TODO remove mock, replace w api response
   const MOCK_RESULT = {
@@ -63,18 +72,17 @@ export function ResultsStage({
     transcript: new File([""], "transcript_out"),
   };
 
-  // TODO POST request with form values
-  // TODO loading while await
-  const isLoading = true;
-
   return (
     <div className="flex flex-col w-full h-full">
       {isLoading ? (
-        <LoadingResults filename={MOCK_RESULT.filename} status={status} />
+        <LoadingResults
+          filename={getValues("videoInput")[0].name}
+          status={status}
+        />
       ) : (
         <CompleteResults
-          filename={MOCK_RESULT.filename}
-          annotationType={MOCK_RESULT.annotationType}
+          filename={getValues("videoInput")[0].name}
+          annotationType={getValues("annotationType")}
           speakerThumbnails={MOCK_RESULT.speakerThumbnails}
         />
       )}

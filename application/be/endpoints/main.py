@@ -1,12 +1,10 @@
-import json
+import asyncio
 # from threading import Thread
 import aiofiles
 import os
 import sys
 from typing import Union
 import uuid
-from fastapi.websockets import WebSocketState
-from waiting import wait
 
 from fastapi import FastAPI, HTTPException, status, UploadFile, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
@@ -15,6 +13,7 @@ from fastapi.responses import FileResponse, JSONResponse
 from pydantic.color import Color
 
 sys.path.insert(0, '..')
+from utils.api_config import CORS_ORIGINS, STATUS_POLLING_DELAY_SEC, Routes
 from utils.status_types import ProcessingStatus
 from endpoints.processing_thread_manager import ProcessingThreadManager
 from utils.annotation_types import AnnotationInterface
@@ -29,14 +28,9 @@ proc_thread_mgr = ProcessingThreadManager()
 
 # add CORS middleware to resolve “No Access-Control-Allow-Origin header” 
 # https://fastapi.tiangolo.com/tutorial/cors/
-port_config = json.load(open("../../port_config.json", "r"))
-origins = [
-    f"http://localhost:{port_config['fe']}",
-    f"http://localhost:{port_config['be']}",
-]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -46,7 +40,7 @@ app.add_middleware(
 def read_root():
     return {"Hello": "World", "Seeing": "Sounds"}
 
-@app.post("/upload_video/", status_code=202)
+@app.post(Routes.POST_UPLOAD_VIDEO, status_code=202)
 async def upload_video(video: UploadFile, annotation_type: AnnotationInterface, num_speakers: int, colour_list_str: Union[str, None] = ""):
     # https://fastapi.tiangolo.com/tutorial/request-files/ 
     # settings in query params, video file in request body - https://github.com/tiangolo/fastapi/issues/2257#issuecomment-717522156
@@ -112,19 +106,12 @@ async def upload_video(video: UploadFile, annotation_type: AnnotationInterface, 
 
     return {"request_id": request_id, "filename": video.filename, "filetype": video.content_type, "settings": video_settings}
 
-
-@app.websocket("/ws/{request_id}")
+@app.websocket(Routes.STATUS_WEBSOCKET + "/{request_id}")
 async def websocket_endpoint(websocket: WebSocket, request_id: str):
     print(f"[{request_id}] websocket initialised at {websocket.url}")
 
     await websocket.accept()
     print(f"[{request_id}] websocket accepted connection from client {websocket.client}")
-
-    wait(lambda: websocket.client_state == WebSocketState.CONNECTED)
-    print(f"[{request_id}] websocket client successfully connected")
-
-    msg = await websocket.receive_text()
-    print(f"[{request_id}] websocket received text:", msg)
 
     if proc_thread_mgr.is_valid(request_id): 
         print(f"[{request_id}] websocket validated request_id")
@@ -135,34 +122,37 @@ async def websocket_endpoint(websocket: WebSocket, request_id: str):
         return
 
     try: 
-        prev_status = None 
+        prev_status = ProcessingStatus.RECEIVED 
+        await websocket.send_json({"request_id": request_id,
+                            "status": prev_status})
+        print(f"[{request_id}] init status {prev_status} via websocket")
         while True: 
-            wait(
-                lambda: prev_status != proc_thread_mgr.get_status(request_id), 
-                sleep_seconds = 5, # how often to poll predicate
-            )
+            while prev_status == proc_thread_mgr.get_status(request_id):
+                # time to wait before polling again for change in status
+                await asyncio.sleep(STATUS_POLLING_DELAY_SEC)
             status = proc_thread_mgr.get_status(request_id)
+            print(f"[{request_id}] new status: {status}")
             if status == ProcessingStatus.ERROR: 
                 error_msg = proc_thread_mgr.get_error_msg(request_id)
-                print(f"[{request_id}] reporting error [{error_msg}] via websocket")
                 msg = {
                     "request_id": request_id,
                     "status": status,
                     "message": error_msg
                 }
+                print(f"[{request_id}] reporting error [{error_msg}] via websocket:", msg)
             else: 
-                print(f"[{request_id}] updating status {status} via websocket")
                 msg = {
                     "request_id": request_id,
                     "status": status
                 }
+                print(f"[{request_id}] updating status {status} via websocket:", msg)
             await websocket.send_json(msg)
             prev_status = status
     except WebSocketDisconnect as d:
         print(f"[{request_id}] websocket disconnected by client ({d.code}, {d.reason})")
         
 
-@app.get("/download_annotated/")
+@app.get(Routes.GET_ANNOTATED_VIDEO)
 async def get_annotated_video(request_id: str):
     # HTTP problem details JSON format as per https://www.rfc-editor.org/rfc/rfc7807#section-3.1
     if not proc_thread_mgr.is_valid(request_id):

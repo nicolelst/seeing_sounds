@@ -23,7 +23,6 @@ pip install fastapi
 pip install python-multipart
 pip install "uvicorn[standard]"
 pip install websockets
-pip install waiting
 ```
 
 Install requirements for speech separation with VisualVoice
