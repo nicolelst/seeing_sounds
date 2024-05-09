@@ -3,8 +3,11 @@ from utils.path_constants import *
 from utils.annotation_types import AnnotationInterface
 
 
+def get_req_dir(request_id):
+	return os.path.join(STORAGE_DIR, request_id)
+
 def get_input_video_filename(request_id, filetype):
-	return f"{request_id}{INPUT_TAG}.{filetype}"
+	return f"{request_id}_{INPUT_TAG}.{filetype}"
 
 def get_preprocessed_filenames(input_video_filename):
 	filename = input_video_filename.split(".")[0]
@@ -19,7 +22,7 @@ def get_annotated_filename(preproc_video_filename, annotation_type: AnnotationIn
 	return preproc_video_filename.replace(PREPROC_TAG, ANNOTATION_TAG_DICT[annotation_type])
 
 def get_output_video_filename(request_id):
-	req_output_dir = os.path.join(STORAGE_DIR, request_id, OUTPUT_FOLDER)
+	req_output_dir = os.path.join(get_req_dir(request_id), OUTPUT_FOLDER)
 
 	if not os.path.isdir(req_output_dir): # invalid request ID
 		return None
@@ -30,4 +33,10 @@ def get_output_video_filename(request_id):
 	
 	# no video output found
 	return None 
-		
+
+def get_annotation_type(filename) -> AnnotationInterface:
+  try: 
+    annot = filename.split("_")[-1].split(".")[0]
+    return AnnotationInterface(annot)
+  except:
+    return None

@@ -13,12 +13,13 @@ from fastapi.responses import FileResponse, JSONResponse
 from pydantic.color import Color
 
 sys.path.insert(0, '..')
+from endpoints.zip_results import zip_results
 from utils.api_config import CORS_ORIGINS, STATUS_POLLING_DELAY_SEC, Routes
 from utils.status_types import ProcessingStatus
 from endpoints.processing_thread_manager import ProcessingThreadManager
 from utils.annotation_types import AnnotationInterface
-from utils.path_constants import STORAGE_DIR
-from utils.video_name_constants import get_input_video_filename, get_output_video_filename
+from utils.path_constants import ANNOTATED_VIDEO_NAME, STORAGE_DIR, THUMBNAIL_DIR_NAME
+from utils.video_name_constants import get_annotation_type, get_input_video_filename
 from utils.video_settings import VideoSettings
 from video_processing.process_video import process_video
 
@@ -34,6 +35,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"]
 )
 
 @app.get("/")
@@ -186,18 +188,20 @@ async def get_annotated_video(request_id: str):
             }
         )
 
-    video_filepath = get_output_video_filename(request_id)
-    if video_filepath == None:
+    zip_filepath = zip_results(request_id)
+    if zip_filepath == None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Invalid request_id. No output video found for the request with ID [{request_id}]")
 
     response = FileResponse(
-        path = video_filepath,
+        path = zip_filepath,
         headers = {
             "request_id": request_id, 
-            "content-disposition": "attachment", 
-            "content-type": "video/mp4"
+            "annotation_type": get_annotation_type(zip_filepath),
+            "video_filename": ANNOTATED_VIDEO_NAME,
+            "thumbnail_dir": THUMBNAIL_DIR_NAME,
+            "content-disposition": "attachment"
         },
-        media_type = "video/mp4",
-        filename = "annotated_video.mp4"
+        media_type = "application/zip",
+        filename = zip_filepath.split("/")[-1]
     )
     return response

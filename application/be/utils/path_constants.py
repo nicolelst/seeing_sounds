@@ -11,14 +11,14 @@ TRANSCRIPT_FOLDER = "transcripts"
 OUTPUT_FOLDER = "outputs"
 
 # intermediate filenames
-INPUT_TAG = "_raw"
-PREPROC_TAG = "_preproc"
-ANNOT_TEMP_TAG = "_annot_temp"
+INPUT_TAG = "raw"
+PREPROC_TAG = "preproc"
+ANNOT_TEMP_TAG = "annot_temp"
 ANNOTATION_TAG_DICT = {
-  AnnotationInterface.FLOATING: "_floating",
-  AnnotationInterface.COLOUR: "_colour",
-  AnnotationInterface.POINTER: "_pointer",
-  AnnotationInterface.TRADITIONAL: "_traditional"
+  AnnotationInterface.FLOATING: "floating",
+  AnnotationInterface.COLOUR: "colour",
+  AnnotationInterface.POINTER: "pointer",
+  AnnotationInterface.TRADITIONAL: "traditional"
 }
 
 # logs filenames
@@ -26,3 +26,7 @@ PREPROC_LOGS_FILENAME = "preprocessing_logs.txt"
 SPEECH_SEP_LOGS_FILENAME = "speech_sep_logs.txt"
 SPEECH_REC_LOGS_FILENAME = "speech_rec_logs.txt"
 ANNOTATION_LOGS_FILENAME = "annotation_logs.txt"
+
+# download results zip file
+ANNOTATED_VIDEO_NAME = "annotated_video.mp4"
+THUMBNAIL_DIR_NAME = "speaker_thumbnails"
