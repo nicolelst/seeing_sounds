@@ -1,4 +1,5 @@
-import { ReactElement } from "react";
+import { ReactElement, useCallback, useEffect, useState } from "react";
+import JSZip from "jszip";
 import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import { Button } from "@/shadcn/components/ui/button";
 import { VideoIcon } from "@radix-ui/react-icons";
@@ -6,28 +7,112 @@ import ReactPlayer from "react-player";
 import { annotationType, annotationTypeMap } from "@/types/annotationType";
 import GetTranscriptButton from "./getTranscriptButton";
 import SpeakerListDisplay from "./speakerListDisplay";
-
-import myVideo from "/Users/User/Documents/fyp/report_moist/outputs/floating_bbox.mp4";
+import { DOWNLOAD_VIDEO_URL } from "@/routes";
+import { RGBString } from "@/types/colourInfo";
 
 interface CompleteResultsProps {
+  requestID: string;
   filename: string;
   annotationType: annotationType;
-  speakerThumbnails: File[];
+  speakerColours: Array<RGBString>;
+  numSpeakers: number;
 }
 
 export default function CompleteResults({
+  requestID,
   filename,
   annotationType,
-  speakerThumbnails,
+  speakerColours,
+  numSpeakers,
 }: CompleteResultsProps): ReactElement {
-  // TODO GET request for results
+  // output URLs for displaying
+  const [videoURL, setVideoURL] = useState<string>("");
+  const [thumbnailURLs, setThumbnailURLs] = useState<Array<string>>([]);
+
+  // parse results zip file from response and create URLs
+  const processResponse = useCallback(async (response: Response) => {
+    const blob = await response.blob();
+    const zip = await JSZip.loadAsync(blob);
+
+    const videoFilename = response.headers.get("video_filename");
+    if (videoFilename) {
+      const videoFile = zip.file(videoFilename);
+      if (videoFile) {
+        videoFile
+          .async("blob")
+          .then((videoBlob) => setVideoURL(URL.createObjectURL(videoBlob)));
+      }
+    }
+
+    const thumbnailDir = response.headers.get("thumbnail_dir");
+    if (thumbnailDir) {
+      const thumbnailFiles = zip.file(new RegExp(`${thumbnailDir}/.*`));
+      // sort files by speaker ID
+      const thumbnailPaths = thumbnailFiles
+        .map((f) => f.name)
+        .sort((a, b) => {
+          // parse speaker ID: remove file extension, non numerical characters
+          const getSpeakerID = (filepath: string) =>
+            parseInt(filepath.replace(/(\..+$|[^\d]+)/, ""));
+          return getSpeakerID(a) - getSpeakerID(b);
+        });
+      // create thumbnail URLs
+      const getNewThumbnailURLs = async (thumbnailPaths: Array<string>) => {
+        const newThumbnailURLs = new Array<string>();
+        for (const path of thumbnailPaths) {
+          zip
+            .file(path)
+            ?.async("blob")
+            .then((thumbnailBlob) => {
+              // create URL for speaker thumbnail
+              const thumbnailURL = URL.createObjectURL(thumbnailBlob);
+              newThumbnailURLs.push(thumbnailURL);
+            });
+        }
+        return newThumbnailURLs;
+      };
+      setThumbnailURLs(await getNewThumbnailURLs(thumbnailPaths));
+    }
+  }, []);
+
+  // GET request for results
+  useEffect(() => {
+    const queryURL = `${DOWNLOAD_VIDEO_URL}?request_id=${encodeURIComponent(
+      requestID
+    )}`;
+    const getResults = async () => {
+      console.log("GET", queryURL);
+
+      const response = await fetch(queryURL, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+        },
+      });
+
+      console.log(
+        "GET ANNOTATED VIDEO REQUEST:",
+        response.status,
+        response.statusText
+      );
+
+      if (response.ok) {
+        // console.log("OK:", new Map(response.headers));
+        processResponse(response);
+      } else {
+        console.log("PROBLEM:", new Map(response.headers));
+        // TODO trigger a pop up
+      }
+    };
+    getResults();
+  }, [processResponse, requestID]);
+
   return (
     <div className="grid grid-cols-3 w-full h-full">
       <div className="col-span-2 flex items-center justify-center">
         <AspectRatio ratio={16 / 9}>
           <ReactPlayer
-            url={myVideo}
-            // TODO remove mock result url={URL.createObjectURL(MOCK_RESULT.video)}
+            url={videoURL}
             width="100%"
             height="100%"
             controls={true}
@@ -49,19 +134,25 @@ export default function CompleteResults({
           </p>
           <div className="flex flex-col gap-y-2">
             <p>
-              <b>Speakers </b>({2}):
+              <b>Speakers </b>({numSpeakers}):
               {/* TODO {MOCK_RESULT.speakerThumbnails.length}): */}
             </p>
-            <SpeakerListDisplay speakerThumbnails={speakerThumbnails} />
+            <SpeakerListDisplay
+              speakerThumbnailURLs={thumbnailURLs}
+              speakerColours={speakerColours}
+            />
           </div>
         </div>
         <div className="grid grid-cols-2 space-x-2 mt-2">
           {/* TODO download files */}
-          <Button className="py-6 text-md">
+          <Button type="button" className="py-6 text-md" href={videoURL}>
             <VideoIcon className="mr-2 h-5 w-5" />
             Get video
           </Button>
-          <GetTranscriptButton speakerThumbnails={speakerThumbnails} />
+          <GetTranscriptButton
+            speakerThumbnailURLs={thumbnailURLs}
+            speakerColours={speakerColours}
+          />
         </div>
       </div>
     </div>

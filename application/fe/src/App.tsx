@@ -13,7 +13,7 @@ import { UPLOAD_VIDEO_URL } from "./routes";
 function App() {
   const [formStageNum, setFormStageNum] = useState(1);
   const [videoFilepath, setVideoFilepath] = useState<string>("");
-  const [requestID, setRequestID] = useState<string>("");
+  const [requestID, setRequestID] = useState<string>();
   // TODO num stages & names should be calculated from a list of components
   const formStageNames = ["Upload video", "Adjust settings", "Done!"];
 
@@ -45,8 +45,10 @@ function App() {
       captionBlackText: false,
     },
   });
+
   const onSubmit: SubmitHandler<FormInputs> = async (data: FormInputs) => {
     // TODO add other settings to queryURL
+    // TODO speaker colours not updated in query
     const queryURL = `${UPLOAD_VIDEO_URL}?annotation_type=${encodeURIComponent(
       data.annotationType
     )}&num_speakers=${encodeURIComponent(
@@ -66,7 +68,7 @@ function App() {
       body: formData,
     });
 
-    console.log(response.status, response.statusText);
+    console.log("POST VIDEO REQUEST:", response.status, response.statusText);
     const result = await response.json();
 
     if (response.ok) {
@@ -118,7 +120,7 @@ function App() {
               />
             ) : formStageNum === 3 ? (
               <ResultsStage
-                requestID={requestID}
+                requestID={requestID ?? ""}
                 getValues={getValues}
                 nextStage={nextStage}
                 resetForm={resetForm}
