@@ -12,12 +12,11 @@ import {
 } from "@/shadcn/components/ui/dialog";
 import { Input } from "@/shadcn/components/ui/input";
 import { Pencil2Icon } from "@radix-ui/react-icons";
-import { RGBString } from "@/types/colourInfo";
 import SpeakerAvatar from "./speakerAvatar";
 
 interface GetTranscriptButtonProps {
   speakerThumbnailURLs: Array<string>;
-  speakerColours: Array<RGBString>;
+  speakerColours: Array<string>;
 }
 export default function GetTranscriptButton({
   speakerThumbnailURLs,
@@ -41,7 +40,7 @@ export default function GetTranscriptButton({
 
 interface SpeakerInfoDialogProps {
   speakerThumbnailURLs: Array<string>;
-  speakerColours: Array<RGBString>;
+  speakerColours: Array<string>;
 }
 
 function SpeakerInfoDialog({

@@ -1,10 +1,9 @@
 import { ReactElement } from "react";
-import { RGBString } from "@/types/colourInfo";
 import SpeakerAvatar from "./speakerAvatar";
 
 interface SpeakerListDisplayProps {
   speakerThumbnailURLs: Array<string>;
-  speakerColours: Array<RGBString>;
+  speakerColours: Array<string>;
 }
 export default function SpeakerListDisplay({
   speakerThumbnailURLs,

@@ -8,13 +8,12 @@ import { annotationType, annotationTypeMap } from "@/types/annotationType";
 import GetTranscriptButton from "./getTranscriptButton";
 import SpeakerListDisplay from "./speakerListDisplay";
 import { DOWNLOAD_VIDEO_URL } from "@/routes";
-import { RGBString } from "@/types/colourInfo";
 
 interface CompleteResultsProps {
   requestID: string;
   filename: string;
   annotationType: annotationType;
-  speakerColours: Array<RGBString>;
+  speakerColours: Array<string>;
   numSpeakers: number;
 }
 

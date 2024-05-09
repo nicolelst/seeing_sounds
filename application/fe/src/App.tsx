@@ -48,7 +48,6 @@ function App() {
 
   const onSubmit: SubmitHandler<FormInputs> = async (data: FormInputs) => {
     // TODO add other settings to queryURL
-    // TODO speaker colours not updated in query
     const queryURL = `${UPLOAD_VIDEO_URL}?annotation_type=${encodeURIComponent(
       data.annotationType
     )}&num_speakers=${encodeURIComponent(
@@ -56,6 +55,7 @@ function App() {
     )}&colour_list_str=${encodeURIComponent(data.speakerColours.join(";"))}`;
 
     console.log("POST", queryURL);
+    console.log("settings:", getValues());
 
     const formData = new FormData();
     formData.append("video", data.videoInput[0]);
@@ -72,7 +72,6 @@ function App() {
     const result = await response.json();
 
     if (response.ok) {
-      // TODO create websocket
       console.log("REQUEST ID:", result.request_id);
       setRequestID(result.request_id);
       nextStage();
