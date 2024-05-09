@@ -10,6 +10,7 @@ from fastapi import FastAPI, HTTPException, status, UploadFile, WebSocket, WebSo
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 # from fastapi.testclient import TestClient
+from pydantic import BaseModel
 from pydantic.color import Color
 
 sys.path.insert(0, '..')
@@ -205,3 +206,33 @@ async def get_annotated_video(request_id: str):
         filename = zip_filepath.split("/")[-1]
     )
     return response
+
+class Speaker_Info(BaseModel): 
+    name: str
+    colour: Color
+
+@app.get(Routes.GET_TRANSCRIPT)
+async def get_transcript(request_id: str, speaker_names: str, speaker_colours: str):
+    if not proc_thread_mgr.is_valid(request_id):
+        # invalid request id
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invalid request_id. The server has never received a request with ID [{request_id}].")
+
+    # parse speaker info
+    speaker_name_list = speaker_names.split(";")
+    speaker_colour_list = [x.strip() for x in speaker_colours.split(";")]
+
+    # validate speaker info
+    if len(speaker_name_list) != len(speaker_colour_list):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Inconsistent number of speaker names ({len(speaker_name_list)}) and colours ({len(speaker_name_list)}): {speaker_name_list}, {speaker_colour_list}")
+    try: 
+        colour_list = [Color(c) for c in colour_list]
+    except: 
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Error parsing colours: {speaker_colour_list}")
+
+
+    # TODO generate transcript and return
+    info = []
+    for i in range(len(speaker_name_list)):
+        s = Speaker_Info(name=speaker_name_list[i], colour=speaker_colour_list[i])
+        info.append(s)
+    return {"request_id": request_id, "speaker_info": info}

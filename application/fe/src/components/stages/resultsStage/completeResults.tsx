@@ -172,8 +172,10 @@ export default function CompleteResults({
             Get video
           </Button>
           <GetTranscriptButton
+            requestID={requestID}
             speakerThumbnailURLs={thumbnailURLs}
             speakerColours={speakerColours}
+            numSpeakers={numSpeakers}
           />
         </div>
       </div>

@@ -8,12 +8,12 @@ import {
   PopoverContent,
 } from "@/shadcn/components/ui/popover";
 import { TwitterPicker } from "react-color";
-import { FormInputs } from "@/types/formInputs";
+import { VideoFormInputs } from "@/types/videoFormInputs";
 import { DEFAULT_HEX_10 } from "@/types/colourInfo";
 
 interface CaptionColourInputsProps {
-  getValues: UseFormGetValues<FormInputs>;
-  setValue: UseFormSetValue<FormInputs>;
+  getValues: UseFormGetValues<VideoFormInputs>;
+  setValue: UseFormSetValue<VideoFormInputs>;
 }
 
 export default function CaptionColourInputs({

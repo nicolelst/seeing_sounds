@@ -1,13 +1,13 @@
 import { ReactElement, useState } from "react";
 import { UseFormGetValues } from "react-hook-form";
 import { Button } from "@/shadcn/components/ui/button";
-import { FormInputs } from "@/types/formInputs";
+import { VideoFormInputs } from "@/types/videoFormInputs";
 import CompleteResults from "./completeResults";
 import LoadingResults from "./loadingResults";
 
 interface ResultsStageProps {
   requestID: string;
-  getValues: UseFormGetValues<FormInputs>;
+  getValues: UseFormGetValues<VideoFormInputs>;
   nextStage: () => void;
   resetForm: () => void;
 }

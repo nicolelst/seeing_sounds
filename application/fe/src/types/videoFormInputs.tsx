@@ -1,6 +1,6 @@
 import { annotationType } from "./annotationType";
 
-export type FormInputs = {
+export type VideoFormInputs = {
   videoInput: FileList;
   numSpeakers: number;
   annotationType: annotationType;

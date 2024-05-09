@@ -7,7 +7,7 @@ import {
   InvalidStage,
 } from "./components/stages";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { FormInputs } from "./types/formInputs";
+import { VideoFormInputs } from "./types/videoFormInputs";
 import { UPLOAD_VIDEO_URL } from "./routes";
 
 function App() {
@@ -38,7 +38,7 @@ function App() {
     setError,
     clearErrors,
     formState: { errors },
-  } = useForm<FormInputs>({
+  } = useForm<VideoFormInputs>({
     defaultValues: {
       annotationType: "floating",
       fontSize: 24,
@@ -46,7 +46,9 @@ function App() {
     },
   });
 
-  const onSubmit: SubmitHandler<FormInputs> = async (data: FormInputs) => {
+  const onSubmit: SubmitHandler<VideoFormInputs> = async (
+    data: VideoFormInputs
+  ) => {
     // TODO add other settings to queryURL
     const queryURL = `${UPLOAD_VIDEO_URL}?annotation_type=${encodeURIComponent(
       data.annotationType
@@ -83,55 +85,59 @@ function App() {
 
   return (
     // TODO: items-center dynamic sizes
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="flex flex-col w-screen h-screen">
-        <div className="flex flex-col h-full pt-12 space-y-2 mx-32 max-w-7xl">
-          <Header />
-          <ProgressBar
-            formStageNames={formStageNames}
-            formStageNum={formStageNum}
-            setFormStageNum={setFormStageNum}
-          />
-          <div className="flex-1">
-            {formStageNum === 1 ? (
-              <UploadStage
-                videoFilepath={videoFilepath}
-                setVideoFilepath={setVideoFilepath}
-                register={register}
-                watch={watch}
-                getValues={getValues}
-                setValue={setValue}
-                resetField={resetField}
-                trigger={trigger}
-                errors={errors}
-                setError={setError}
-                clearErrors={clearErrors}
-                nextStage={nextStage}
-              />
-            ) : formStageNum === 2 ? (
-              <SettingsStage
-                // handleNext={handleSubmit(onSubmit)}
-                register={register}
-                getValues={getValues}
-                setValue={setValue}
-                watch={watch}
-                errors={errors}
-              />
-            ) : formStageNum === 3 ? (
-              <ResultsStage
-                requestID={requestID ?? ""}
-                getValues={getValues}
-                nextStage={nextStage}
-                resetForm={resetForm}
-              />
-            ) : (
-              <InvalidStage />
-            )}
-          </div>
+    <div className="flex flex-col w-screen h-screen">
+      <div className="flex flex-col h-full pt-12 space-y-2 mx-32 max-w-7xl">
+        <Header />
+        <ProgressBar
+          formStageNames={formStageNames}
+          formStageNum={formStageNum}
+          setFormStageNum={setFormStageNum}
+        />
+        <div className="flex-1 h-full">
+          {formStageNum <= 2 ? (
+            <form onSubmit={handleSubmit(onSubmit)} className="h-full w-full">
+              {formStageNum === 1 ? (
+                <UploadStage
+                  videoFilepath={videoFilepath}
+                  setVideoFilepath={setVideoFilepath}
+                  register={register}
+                  watch={watch}
+                  getValues={getValues}
+                  setValue={setValue}
+                  resetField={resetField}
+                  trigger={trigger}
+                  errors={errors}
+                  setError={setError}
+                  clearErrors={clearErrors}
+                  nextStage={nextStage}
+                />
+              ) : formStageNum === 2 ? (
+                <SettingsStage
+                  // handleNext={handleSubmit(onSubmit)}
+                  register={register}
+                  getValues={getValues}
+                  setValue={setValue}
+                  watch={watch}
+                  errors={errors}
+                />
+              ) : (
+                <InvalidStage />
+              )}
+            </form>
+          ) : formStageNum === 3 ? (
+            <ResultsStage
+              requestID={requestID ?? ""}
+              getValues={getValues}
+              nextStage={nextStage}
+              resetForm={resetForm}
+            />
+          ) : (
+            <InvalidStage />
+          )}
         </div>
-        <Footer />
       </div>
-    </form>
+      <Footer />
+    </div>
   );
 }
 

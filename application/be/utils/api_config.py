@@ -14,3 +14,4 @@ class Routes(str, Enum):
     POST_UPLOAD_VIDEO = "/upload_video"
     STATUS_WEBSOCKET = "/ws/status"
     GET_ANNOTATED_VIDEO = "/download_annotated"
+    GET_TRANSCRIPT = "/download_transcript"
