@@ -106,6 +106,25 @@ export default function CompleteResults({
     getResults();
   }, [processResponse, requestID]);
 
+  const downloadFile = (url: string, filename: string, filetype: string) => {
+    // https://stackoverflow.com/a/63965930
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    link.type = filetype;
+
+    document.body.appendChild(link); // append html link element to page
+    link.click(); // start download
+    link.parentNode?.removeChild(link); // clean up and remove link
+  };
+
+  const downloadVideo = () =>
+    downloadFile(
+      videoURL,
+      `${filename.replace(/\..+$/, "")}_annotated_${annotationType}.mp4`,
+      "video/mp4"
+    );
+
   return (
     <div className="grid grid-cols-3 w-full h-full">
       <div className="col-span-2 flex items-center justify-center">
@@ -144,7 +163,11 @@ export default function CompleteResults({
         </div>
         <div className="grid grid-cols-2 space-x-2 mt-2">
           {/* TODO download files */}
-          <Button type="button" className="py-6 text-md" href={videoURL}>
+          <Button
+            type="button"
+            className="py-6 text-md"
+            onClick={downloadVideo}
+          >
             <VideoIcon className="mr-2 h-5 w-5" />
             Get video
           </Button>

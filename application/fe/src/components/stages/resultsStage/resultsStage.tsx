@@ -40,7 +40,7 @@ export function ResultsStage({
       )}
       <Button
         className="w-fit my-3 self-end"
-        disabled={isLoading} // TODO hide button?
+        disabled={isLoading} // TODO pop up confirmation
         // type="reset"
         onClick={() => {
           // TODO remove this
