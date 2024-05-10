@@ -3,11 +3,13 @@ import os
 import subprocess
 import sys
 
+from utils.process_video_settings import SpeechSepSettings
 from utils.path_constants import VISUAL_VOICE_DIR, PRETRAINED_MODEL_DIR
 
 
 def visual_voice_speech_separation (
         output_dir, 
+        settings: SpeechSepSettings,
         preproc_video_filename = "video_25fps.mp4", 
         preproc_audio_filename="audio_mono_16kHz.wav",
         num_speakers = 2,
@@ -47,7 +49,7 @@ def visual_voice_speech_separation (
         --n_fft 512 \
         --unet_output_nc 2 \
         --normalization \
-        --visual_feature_type both \
+        --visual_feature_type {settings.visual_features} \
         --identity_feature_dim 128 \
         --audioVisual_feature_dim 1152 \
         --visual_pool maxpool \
@@ -58,9 +60,9 @@ def visual_voice_speech_separation (
         --desired_rms 0.7 \
         --number_of_speakers {num_speakers} \
         --mask_clip_threshold 5 \
-        --hop_length 2.55 \
+        --hop_length {settings.hop_length} \
         --lipreading_extract_feature \
-        --number_of_identity_frames 1 \
+        --number_of_identity_frames {settings.number_of_identity_frames} \
         --output_dir_root {output_dir}
         """, 
         shell=True,

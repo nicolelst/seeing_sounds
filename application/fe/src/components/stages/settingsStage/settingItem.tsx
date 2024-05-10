@@ -11,7 +11,7 @@ import { CircleHelpIcon, TriangleAlertIcon } from "lucide-react";
 
 interface SettingItemProps {
   label: string;
-  description: string;
+  description: string | ReactElement;
   children: ReactNode;
   triggerAsChild?: boolean;
   error: Merge<FieldError, (FieldError | undefined)[]> | undefined;
@@ -37,18 +37,16 @@ export default function SettingItem({
               )}
             </TooltipTrigger>
             <TooltipContent
-              className={`py-2 px-3 border ${
+              className={`py-2 px-3 border max-w-60 ${
                 error
                   ? "border-red-200 bg-red-100 text-red-600"
                   : "border-slate-200 bg-slate-900 text-white"
               }`}
               side="bottom"
             >
-              <div className="max-w-60 text-balance break-words">
-                <p className="inline text-sm hyphens-auto ">
-                  {error ? error.message : description}
-                </p>
-              </div>
+              <p className="inline text-sm hyphens-auto text-balance">
+                {error ? error.message : description}
+              </p>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>

@@ -6,7 +6,7 @@ from moviepy.video.VideoClip import TextClip
 from moviepy.video.io.VideoFileClip import VideoFileClip
 
 from utils.video_name_constants import get_annot_temp_filename
-from utils.video_settings import VideoSettings
+from utils.process_video_settings import VideoSettings
 from video_processing.annotation.annotation_utils import *
 
 def add_coloured_subtitles_to_video(

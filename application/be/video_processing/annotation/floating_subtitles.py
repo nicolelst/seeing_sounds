@@ -8,7 +8,7 @@ from moviepy.video.io.VideoFileClip import VideoFileClip
 
 from utils.preprocessing_config import FPS
 from utils.video_name_constants import get_annot_temp_filename
-from utils.video_settings import VideoSettings
+from utils.process_video_settings import VideoSettings
 from video_processing.annotation.annotation_utils import *
 
 

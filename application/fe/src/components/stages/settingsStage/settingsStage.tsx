@@ -10,7 +10,7 @@ import { Accordion } from "@/shadcn/components/ui/accordion";
 import { Button } from "@/shadcn/components/ui/button";
 import { Input } from "@/shadcn/components/ui/input";
 import { Switch } from "@/shadcn/components/ui/switch";
-import { VideoFormInputs } from "@/types/videoFormInputs";
+import { VideoFormInputs, whisperModelNameList } from "@/types/videoFormInputs";
 import CaptionColourInputs from "./captionColourInputs";
 import FontSizeSlider from "./fontSizeSlider";
 import InterfaceSelector from "./interfaceSelector";
@@ -20,6 +20,15 @@ import {
   fontSizeFormatMap,
   fontSizePtMap,
 } from "@/constants/fontSizeFormatMap";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/shadcn/components/ui/select";
+import { visualFeatureMap } from "@/constants/visualFeatureMap";
 
 interface SettingsStageProps {
   register: UseFormRegister<VideoFormInputs>;
@@ -30,7 +39,7 @@ interface SettingsStageProps {
 }
 
 export function SettingsStage({
-  // register,
+  register,
   getValues,
   setValue,
   watch,
@@ -115,15 +124,92 @@ export function SettingsStage({
         >
           <div className="flex flex-col gap-4">
             <SettingItem
-              label="Setting"
-              description="desc"
-              error={undefined}
-              // errors.numSpeakers
+              label="VisualVoice visual input type"
+              description="Type of visual features used by VisualVoice's implementation of UNet for speech separation"
+              error={errors.visualFeatures}
+            >
+              <Select
+                defaultValue={getValues("visualFeatures")}
+                onValueChange={(newValue) =>
+                  setValue("visualFeatures", newValue)
+                }
+              >
+                <SelectTrigger type="button">
+                  <SelectValue placeholder="Select a visual input type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {Object.entries(visualFeatureMap).map((featType) => (
+                      <SelectItem key={featType[0]} value={featType[0]}>
+                        {featType[1]}
+                        {featType[0] == "both" ? " (default)" : ""}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </SettingItem>
+            <SettingItem
+              label="Number of identity frames"
+              description="Number of frames to select as input to facial attributes model for each speaker (min: 1, max: 10)"
+              error={errors.numIdentityFrames}
             >
               <Input
-              // {...register("numSpeakers", {
-              // 	required: true,
-              // })}
+                type="number"
+                {...register("numIdentityFrames", {
+                  required: true,
+                  setValueAs: (v) => parseInt(v),
+                  onChange: (e) => {
+                    if (!e.target.value) {
+                      setValue("numIdentityFrames", 1);
+                    } else {
+                      const cleanValue = parseInt(
+                        e.target.value
+                          .replace(/[^0-9]/g, "") // prevent non digits
+                          .slice(0, 2) // prevent >2 digits
+                      );
+                      setValue(
+                        "numIdentityFrames",
+                        cleanValue >= 10 ? 10 : cleanValue < 1 ? 1 : cleanValue
+                      );
+                    }
+                  },
+                  validate: {
+                    notNan: (v) => !Number.isNaN(v),
+                    notDecimal: (v) => Number.isInteger(v),
+                    minCheck: (v) => v >= 1,
+                    maxCheck: (v) => v <= 10,
+                  },
+                })}
+              />
+            </SettingItem>
+            <SettingItem
+              label="Sliding window hop length"
+              description="Hop length to perform audio separation in a sliding window approach (min: 0.04)"
+              error={errors.hopLength}
+            >
+              <Input
+                {...register("hopLength", {
+                  required: true,
+                  setValueAs: (v) => parseFloat(v),
+                  onChange: (e) => {
+                    if (!e.target.value) {
+                      setValue("hopLength", 0.04);
+                    } else {
+                      const cleanValue = parseFloat(
+                        e.target.value.replace(/[^0-9.]/g, "") // prevent non digits or decimals
+                      );
+                      setValue(
+                        "hopLength",
+                        cleanValue >= 0.04 ? cleanValue : 0.04
+                      );
+                    }
+                  },
+                  validate: {
+                    notNan: (v) => !Number.isNaN(v),
+                    minCheck: (v) => v >= 0.04,
+                  },
+                })}
               />
             </SettingItem>
           </div>
@@ -134,15 +220,56 @@ export function SettingsStage({
         >
           <div className="flex flex-col gap-4">
             <SettingItem
-              label="Setting"
-              description="desc"
-              error={undefined}
-              // errors.numSpeakers
+              label="OpenAI Whisper model"
+              description={
+                <div className="text-wrap">
+                  see{" "}
+                  <a
+                    className="underline text-sky-300 hover:text-sky-500"
+                    href="https://github.com/openai/whisper/blob/main/model-card.md"
+                  >
+                    model card
+                  </a>{" "}
+                  for params and performance
+                </div>
+              }
+              error={errors.speechRecModel}
             >
-              <Input
-              // {...register("numSpeakers", {
-              // 	required: true,
-              // })}
+              <Select
+                defaultValue={getValues("speechRecModel")}
+                onValueChange={(newValue) => {
+                  setValue("speechRecModel", newValue);
+                  if (newValue == "large") {
+                    setValue("englishOnly", false);
+                  }
+                }}
+              >
+                <SelectTrigger type="button">
+                  <SelectValue placeholder="Select a speech recognition model" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {whisperModelNameList.map((model) => (
+                      <SelectItem key={model} value={model}>
+                        {model}
+                        {model == "small" ? " (default)" : ""}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </SettingItem>
+            <SettingItem
+              label="Use English only model"
+              description="Not available for large model. English-only models tend to perform better for tiny and base models."
+              error={errors.captionTextColour}
+            >
+              <Switch
+                disabled={watch("speechRecModel") == "large"}
+                checked={watch("englishOnly")}
+                onCheckedChange={(newValue) =>
+                  setValue("englishOnly", newValue)
+                }
               />
             </SettingItem>
           </div>

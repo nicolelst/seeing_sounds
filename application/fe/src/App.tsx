@@ -40,9 +40,17 @@ function App() {
     formState: { errors },
   } = useForm<VideoFormInputs>({
     defaultValues: {
+      // video settings
       annotationType: "floating",
       fontSize: fontSizeFormatMap.Default[0],
       captionTextColour: "white",
+      // speech sep settings
+      hopLength: 2.55,
+      numIdentityFrames: 1,
+      visualFeatures: "both",
+      // speech rec settings
+      speechRecModel: "small",
+      englishOnly: false,
     },
   });
 
@@ -58,7 +66,17 @@ function App() {
       data.annotationType
     )}&num_speakers=${encodeURIComponent(
       data.numSpeakers
-    )}&colour_list_str=${encodeURIComponent(data.speakerColours.join(";"))}`;
+    )}&colour_list_str=${encodeURIComponent(
+      data.speakerColours.join(";")
+    )}&hop_length=${encodeURIComponent(
+      data.hopLength
+    )}&num_ident_frames=${encodeURIComponent(
+      data.numIdentityFrames
+    )}&visual_feat=${encodeURIComponent(
+      data.visualFeatures
+    )}&model_size=${encodeURIComponent(
+      data.speechRecModel
+    )}&eng_only${encodeURIComponent(data.englishOnly)}`;
 
     console.log("POST", queryURL);
     console.log("settings:", getValues());

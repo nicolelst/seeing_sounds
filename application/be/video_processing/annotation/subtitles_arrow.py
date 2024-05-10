@@ -7,7 +7,7 @@ from moviepy.video.io.VideoFileClip import VideoFileClip
 
 from utils.video_name_constants import get_annot_temp_filename
 from video_processing.annotation.annotation_utils import *
-from utils.video_settings import VideoSettings
+from utils.process_video_settings import VideoSettings
 
 def add_subtitles_pointer_to_video(
         asr_json_list, 

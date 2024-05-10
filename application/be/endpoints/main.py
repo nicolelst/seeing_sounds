@@ -20,7 +20,8 @@ from endpoints.processing_thread_manager import ProcessingThreadManager
 from utils.annotation_types import AnnotationInterface
 from utils.path_constants import ANNOTATED_VIDEO_NAME, STORAGE_DIR, THUMBNAIL_DIR_NAME
 from utils.video_name_constants import get_annotation_type, get_input_video_filename
-from utils.video_settings import VideoSettings
+from utils.model_setting_types import VisualFeatures, WhisperModelSize
+from utils.process_video_settings import SpeechRecSettings, SpeechSepSettings, VideoSettings
 from utils.speaker_info import Speaker_Info
 from video_processing.process_video import process_video
 from video_processing.transcript.generate_transcript import generate_transcript
@@ -45,7 +46,12 @@ def read_root():
     return {"Hello": "World", "Seeing": "Sounds"}
 
 @app.post(Routes.POST_UPLOAD_VIDEO, status_code=202)
-async def upload_video(video: UploadFile, annotation_type: AnnotationInterface, text_colour: str, font_size: int, num_speakers: int, colour_list_str: Union[str, None] = ""):
+async def upload_video(
+    video: UploadFile, 
+    annotation_type: AnnotationInterface, text_colour: str, font_size: int, num_speakers: int, colour_list_str: Union[str, None] = "", 
+    hop_length: float = 2.55, num_ident_frames: int = 1, visual_feat: VisualFeatures = "both", 
+    model_size: WhisperModelSize = "small", eng_only:bool = False
+):
     # https://fastapi.tiangolo.com/tutorial/request-files/ 
     # settings in query params, video file in request body - https://github.com/tiangolo/fastapi/issues/2257#issuecomment-717522156
 
@@ -68,6 +74,8 @@ async def upload_video(video: UploadFile, annotation_type: AnnotationInterface, 
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Error parsing colours: {colour_list}")
 
     video_settings = VideoSettings(annotation_type=annotation_type, text_colour=text_col, font_size=font_size, colour_list=colour_list, num_speakers=num_speakers)
+    speech_sep_settings = SpeechSepSettings(hop_length=hop_length, number_of_identity_frames=num_ident_frames, visual_features=visual_feat)
+    speech_rec_settings = SpeechRecSettings(model_size=model_size, english_only=eng_only)
 
     # assign request ID and create directory
     request_id = str(uuid.uuid4())
@@ -96,7 +104,9 @@ async def upload_video(video: UploadFile, annotation_type: AnnotationInterface, 
         kwargs = {
             "request_dir": request_dir, 
             "input_video_filename": save_filename, 
-            "video_settings": video_settings
+            "video_settings": video_settings,
+            "speech_sep_settings": speech_sep_settings,
+            "speech_rec_settings": speech_rec_settings
         }
     )
     
@@ -113,7 +123,14 @@ async def upload_video(video: UploadFile, annotation_type: AnnotationInterface, 
     # test_thread = Thread(name="test_websocket", target=test_websocket, args=[request_id], daemon=True)
     # test_thread.start()
 
-    return {"request_id": request_id, "filename": video.filename, "filetype": video.content_type, "settings": video_settings}
+    return {
+        "request_id": request_id, 
+        "filename": video.filename, 
+        "filetype": video.content_type, 
+        "video_settings": video_settings,
+        "speech_sep_settings": speech_sep_settings,
+        "speech_rec_settings": speech_rec_settings
+    }
 
 @app.websocket(Routes.STATUS_WEBSOCKET + "/{request_id}")
 async def websocket_endpoint(websocket: WebSocket, request_id: str):

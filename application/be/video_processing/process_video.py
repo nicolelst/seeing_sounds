@@ -2,14 +2,14 @@ import os
 
 from utils.path_constants import *
 from utils.video_name_constants import *
-from utils.video_settings import VideoSettings
+from utils.process_video_settings import *
 from video_processing.video_preprocessing import video_preprocessing
 from video_processing.speech_separation import visual_voice_speech_separation
 from video_processing.speech_recognition import whisper_speech_recognition
 from video_processing.annotation.video_annotation import video_annotation
 
 
-def process_video(request_dir, input_video_filename, video_settings: VideoSettings): 
+def process_video(request_dir, input_video_filename, video_settings: VideoSettings, speech_sep_settings: SpeechSepSettings, speech_rec_settings: SpeechRecSettings): 
 	input_video_filepath = os.path.join(request_dir, input_video_filename)
 	preproc_video_filename, preproc_audio_filename = get_preprocessed_filenames(input_video_filename)
 
@@ -36,16 +36,17 @@ def process_video(request_dir, input_video_filename, video_settings: VideoSettin
 		preproc_video_filename = preproc_video_filename,
 		preproc_audio_filename = preproc_audio_filename,
 		num_speakers= video_settings.num_speakers, 
-		logs_filepath = os.path.join(logs_output_dir, SPEECH_SEP_LOGS_FILENAME)
+		logs_filepath = os.path.join(logs_output_dir, SPEECH_SEP_LOGS_FILENAME),
+		settings = speech_sep_settings
 	)
 
 	# speech recognition
 	transcript_list = whisper_speech_recognition(
 		audio_track_dir = request_dir, 
 		transcript_dir = transcript_output_dir, 
-		model_name = "small", # 244 M params, ~6x relative speed, Librispeech clean WER 3.4
 		output_format = "json",
-		logs_filepath = os.path.join(logs_output_dir, SPEECH_REC_LOGS_FILENAME)
+		logs_filepath = os.path.join(logs_output_dir, SPEECH_REC_LOGS_FILENAME),
+		settings = speech_rec_settings
 	)
 
 	# video annotation
@@ -53,7 +54,7 @@ def process_video(request_dir, input_video_filename, video_settings: VideoSettin
 		preproc_video_filepath = os.path.join(request_dir, preproc_video_filename), 
 		transcript_list= transcript_list,
 		bbox_list = bbox_list,
-		video_settings = video_settings,
+		settings = video_settings,
 		output_dir = final_output_dir, 
 		logs_filepath = os.path.join(logs_output_dir, ANNOTATION_LOGS_FILENAME)
 	)

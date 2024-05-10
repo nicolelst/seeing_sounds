@@ -4,16 +4,17 @@ import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import { Button } from "@/shadcn/components/ui/button";
 import { VideoIcon } from "@radix-ui/react-icons";
 import ReactPlayer from "react-player";
-import { annotationType, annotationTypeMap } from "@/types/annotationType";
+import { AnnotationType } from "@/types/videoFormInputs";
+import { annotationTypeMap } from "@/constants/annotationTypeMap";
+import { DOWNLOAD_VIDEO_URL } from "@/constants/routes";
 import GetTranscriptButton from "./getTranscriptButton";
 import SpeakerListDisplay from "./speakerListDisplay";
-import { DOWNLOAD_VIDEO_URL } from "@/constants/routes";
 import downloadFile from "./downloadFile";
 
 interface CompleteResultsProps {
   requestID: string;
   filename: string;
-  annotationType: annotationType;
+  annotationType: AnnotationType;
   speakerColours: Array<string>;
   numSpeakers: number;
 }
