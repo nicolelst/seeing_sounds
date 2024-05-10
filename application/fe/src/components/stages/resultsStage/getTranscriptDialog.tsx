@@ -44,16 +44,17 @@ export default function GetTranscriptDialog({
 
   const getDefaultSpeakerName = (idx: number) => `Speaker ${idx + 1}`;
 
-  const { register, control, handleSubmit } = useForm<TranscriptFormInputs>({
-    defaultValues: {
-      speakerInfo: [...Array(numSpeakers).keys()].map((idx) => {
-        return {
-          name: getDefaultSpeakerName(idx),
-          colour: speakerColours[idx],
-        };
-      }),
-    },
-  });
+  const { register, control, handleSubmit, reset } =
+    useForm<TranscriptFormInputs>({
+      defaultValues: {
+        speakerInfo: [...Array(numSpeakers).keys()].map((idx) => {
+          return {
+            name: getDefaultSpeakerName(idx),
+            colour: speakerColours[idx],
+          };
+        }),
+      },
+    });
   const { fields } = useFieldArray({
     control,
     name: "speakerInfo",
@@ -128,20 +129,28 @@ export default function GetTranscriptDialog({
     );
 
   const handleDoneLoading = () => {
-    window.setTimeout(() => transcriptURL || errorMsg, 500);
-    setIsLoading(false);
+    const condition = transcriptURL || errorMsg;
+    if (!condition) {
+      window.setTimeout(handleDoneLoading, 500); // check every 500ms
+    } else {
+      setIsLoading(false);
+    }
   };
 
   const resetComponent = () => {
     setErrorMsg("");
     setTranscriptURL("");
     setIsLoading(false);
+    reset();
   };
 
   return (
     <Dialog>
       <DialogTrigger>{trigger}</DialogTrigger>
-      <DialogContent className="w-full max-h-3/5 max-w-sm lg:max-w-xl">
+      <DialogContent
+        className="w-full max-h-3/5 max-w-sm lg:max-w-xl"
+        handleClose={resetComponent}
+      >
         {isLoading ? (
           <div className="h-60 flex flex-col justify-center	items-center gap-2">
             <Label className="text-lg">Getting your transcript...</Label>
@@ -149,7 +158,7 @@ export default function GetTranscriptDialog({
           </div>
         ) : errorMsg ? (
           <div className="h-60 flex flex-col justify-center items-center gap-2 text-red-600">
-            <Label className="text-lg">Something went wrong</Label>
+            <Label className="text-xl">Something went wrong</Label>
             <p className="overflow-auto mx-8">{errorMsg}</p>
             <DialogFooter>
               <DialogClose asChild>
