@@ -63,9 +63,7 @@ export default function FileDropzone({
       } else {
         clearErrors();
         setValue("videoInput", acceptedFiles as unknown as FileList);
-        setVideoFilepath(
-          URL.createObjectURL(acceptedFiles[0]) // TODO move this to post request ?
-        );
+        setVideoFilepath(URL.createObjectURL(acceptedFiles[0]));
       }
     },
     // accept: TODO file types
@@ -74,7 +72,6 @@ export default function FileDropzone({
   const iconStyle = "h-20 w-20 mb-2";
 
   const dropzoneContents = {
-    // TODO add one for accepted file, condition on videoFilepath existing, show name of file
     default: {
       bgColour: "bg-gray-200",
       text: "Choose a video file or drag it here.",
@@ -196,7 +193,6 @@ function NumSpeakersInput({
             pattern: /[0-9]+/,
             maxLength: 2, // 2 digit number
             setValueAs: (v) => parseInt(v),
-            // TODO prevent next without this value
             // TODO auto populate based on first frame + face detection?
             onChange: (e) => {
               if (!e.target.value) {
@@ -216,7 +212,6 @@ function NumSpeakersInput({
               }
             },
             validate: {
-              // TODO not triggering
               notNan: (v) => !Number.isNaN(v),
               notDecimal: (v) => Number.isInteger(v),
               minCheck: (v) => v >= NUM_SPEAKERS_MIN,

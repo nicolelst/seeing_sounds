@@ -41,15 +41,13 @@ export function ResultsStage({
       <Button
         className="w-fit my-3 self-end"
         disabled={isLoading} // TODO pop up confirmation
-        // type="reset"
+        type="button"
         onClick={() => {
-          // TODO remove this
           resetForm();
           nextStage();
         }}
       >
         Start over
-        {/* TODO reset form & clear videoInput field */}
       </Button>
     </div>
   );

@@ -142,7 +142,6 @@ export default function CompleteResults({
           <div className="flex flex-col gap-y-2">
             <p>
               <b>Speakers </b>({numSpeakers}):
-              {/* TODO {MOCK_RESULT.speakerThumbnails.length}): */}
             </p>
             <SpeakerListDisplay
               speakerThumbnailURLs={thumbnailURLs}
@@ -151,7 +150,6 @@ export default function CompleteResults({
           </div>
         </div>
         <div className="grid grid-cols-2 space-x-2 mt-2">
-          {/* TODO download files */}
           <Button
             type="button"
             className="py-6 text-md"

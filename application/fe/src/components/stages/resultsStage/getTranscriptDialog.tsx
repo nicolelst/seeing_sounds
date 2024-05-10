@@ -125,7 +125,7 @@ export default function GetTranscriptDialog({
     downloadFile(
       transcriptURL,
       `${(filename ?? "").replace(/\..+$/, "")}_transcript.docx`,
-      "application/vnd.openxmlformats-officedocument.wordprocessingml.document" // TODO check
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     );
 
   const handleDoneLoading = () => {

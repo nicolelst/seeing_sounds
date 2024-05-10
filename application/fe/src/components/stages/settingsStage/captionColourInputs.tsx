@@ -20,7 +20,6 @@ export default function CaptionColourInputs({
   getValues,
   setValue,
 }: CaptionColourInputsProps): ReactElement {
-  // TODO set up default colours
   const [hexColours, setHexColours] = useState<Array<string>>(
     DEFAULT_HEX_10.slice(0, getValues("numSpeakers"))
   );
