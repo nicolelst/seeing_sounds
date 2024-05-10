@@ -21,7 +21,7 @@ pnpm update
 ## Backend (Python)
 *see application/be*
 
-Backend built with [FastAPI](https://fastapi.tiangolo.com/) in Python 3.8.9.
+Backend built with [FastAPI](https://fastapi.tiangolo.com/) in Python 3.8.9. A list of packages and versions used can be found in [requirements.txt](./application/be/requirements.txt).
 
 #### Install requirements for FastAPI
 ```
