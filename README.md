@@ -11,7 +11,7 @@ Final Year Project submitted to the School of Computer Science and Engineering o
 
 Web page developed with [React Vite](https://vitejs.dev/) using components from [shadcn/ui](https://ui.shadcn.com/)
 
-Install dependencies and update packages
+#### Install dependencies and update packages
 ```
 cd application/fe
 pnpm install
@@ -23,7 +23,7 @@ pnpm update
 
 Backend built with [FastAPI](https://fastapi.tiangolo.com/) in Python 3.8.9.
 
-Install requirements for FastAPI
+#### Install requirements for FastAPI
 ```
 pip install fastapi
 pip install python-multipart
@@ -31,7 +31,7 @@ pip install "uvicorn[standard]"
 pip install websockets
 ```
 
-Install requirements for speech separation with VisualVoice
+#### Install requirements for speech separation with VisualVoice
 ```
 brew install ffmpeg
 
@@ -44,8 +44,8 @@ pip install -U openmim
 mim install mmcv
 ```
 
-Download VisualVoice pretrained models into `application/be/video_processing/VisualVoice/pretrained_models`.
-(based on instructions [here](https://github.com/facebookresearch/VisualVoice?tab=readme-ov-file#demo-with-the-pre-trained-models))
+#### Download VisualVoice pretrained models 
+Follow instructions [here](https://github.com/facebookresearch/VisualVoice?tab=readme-ov-file#demo-with-the-pre-trained-models) to download pretrained model weights into `application/be/video_processing/VisualVoice/pretrained_models`.
 ```
 cd application/be/video_processing/VisualVoice/pretrained_models
 wget http://dl.fbaipublicfiles.com/VisualVoice/av-speech-separation-model/facial_best.pth
@@ -104,4 +104,4 @@ Output: annotated video with captions and speaker identification
 
 
 ## Acknowledgements
-[VisualVoice](https://github.com/facebookresearch/VisualVoice/tree/main) is licensed under CC BY-NC ([Attribution-NonCommercial 4.0 International](https://creativecommons.org/licenses/by-nc/4.0/)). Licensing information can be found [here](https://github.com/facebookresearch/VisualVoice?tab=License-1-ov-file). Changes are documented in [visual_voice_changes.md](./application/be/video_processing/visual_voice_changes.md).
+[VisualVoice](https://github.com/facebookresearch/VisualVoice/tree/main) is licensed under CC BY-NC ([Attribution-NonCommercial 4.0 International](https://creativecommons.org/licenses/by-nc/4.0/)). Licensing information can be found [here](https://github.com/facebookresearch/VisualVoice?tab=License-1-ov-file#readme). Changes are documented in [visual_voice_changes.md](./application/be/video_processing/visual_voice_changes.md).

@@ -18,7 +18,6 @@ class BaseOptions():
 
 	def initialize(self):
 		self.parser.add_argument('--data_path', default='/private/home/rhgao/datasets/VoxCeleb2/', help='path to dataset')
-		self.parser.add_argument('--gpu_ids', type=str, default='0', help='gpu ids: e.g. 0  0,1,2, 0,2. use -1 for CPU')
 		self.parser.add_argument('--name', type=str, default='audioVisual', help='name of the experiment. It decides where to store models')
 		self.parser.add_argument('--checkpoints_dir', type=str, default='checkpoints/', help='models are saved here')
 		self.parser.add_argument('--model', type=str, default='audioVisual', help='chooses how datasets are loaded.')
@@ -41,17 +40,6 @@ class BaseOptions():
 			self.initialize()
 		self.opt = self.parser.parse_args()
 		self.opt.mode = self.mode
-
-		str_ids = self.opt.gpu_ids.split(',')
-		self.opt.gpu_ids = []
-		# for str_id in str_ids:
-		# 	id = int(str_id)
-		# 	if id >= 0:
-		# 		self.opt.gpu_ids.append(id)
-
-		# set gpu ids
-		if len(self.opt.gpu_ids) > 0:
-			torch.cuda.set_device(self.opt.gpu_ids[0])
 
 		#I should process the opt here, like gpu ids, etc.
 		args = vars(self.opt)

@@ -9,7 +9,6 @@
 import os
 import argparse
 import cv2
-import librosa
 from scipy.io import wavfile
 import numpy as np
 from PIL import Image
@@ -82,7 +81,6 @@ def main():
 	#load test arguments
 	opt = TestRealOptions().parse()
 	opt.device = torch.device("cpu")
-	# opt.device = torch.device("cuda")
 
 	# Network Builders
 	builder = ModelBuilder()
@@ -151,22 +149,22 @@ def main():
 
 		if opt.reliable_face:
 			best_score = 0
-			for i in range(10): # TODO why 10
+			for i in range(10): 
 				frame = load_frame(facetrack_path)
 				boxes, scores = mtcnn.detect(frame)
 				if scores[0] != None and scores[0] > best_score:
 					best_frame = frame	
-					best_score = scores[0] # TODO why was this missing 
+					best_score = scores[0] 
 			best_frame.save(facetrack_path[:-4]+"_best.png", "PNG")
 			print("Speaker", speaker_index+1, "reliable face score:", best_score)
-			frames = vision_transform(best_frame).squeeze().unsqueeze(0)#.cuda()
+			frames = vision_transform(best_frame).squeeze().unsqueeze(0)
 		else:
 			frame_list = []
 			for i in range(opt.number_of_identity_frames):
 				frame = load_frame(facetrack_path)
 				frame = vision_transform(frame)
 				frame_list.append(frame)
-			frame = torch.stack(frame_list).squeeze().unsqueeze(0)#.cuda()
+			frame = torch.stack(frame_list).squeeze().unsqueeze(0)
 		
 		sep_audio = np.zeros((audio_length))
 
@@ -187,13 +185,13 @@ def main():
 				normalizer = 1
 
 			audio_spec = generate_spectrogram_complex(segment_audio, opt.window_size, opt.hop_size, opt.n_fft)            
-			audio_spec = torch.FloatTensor(audio_spec).unsqueeze(0)#.cuda()
+			audio_spec = torch.FloatTensor(audio_spec).unsqueeze(0)
 
 			#get mouthroi
 			frame_index_start = int(round(sliding_window_start / opt.audio_sampling_rate * 25))
 			segment_mouthroi = mouthroi[frame_index_start:(frame_index_start + opt.num_frames), :, :]
 			segment_mouthroi = lipreading_preprocessing_func(segment_mouthroi)
-			segment_mouthroi = torch.FloatTensor(segment_mouthroi).unsqueeze(0).unsqueeze(0)#.cuda()
+			segment_mouthroi = torch.FloatTensor(segment_mouthroi).unsqueeze(0).unsqueeze(0)
 				
 			reconstructed_signal = get_separated_audio(net_lipreading, net_facial_attributes, net_unet, audio_spec, segment_mouthroi, frames, opt)
 			reconstructed_signal = reconstructed_signal * normalizer
@@ -211,12 +209,12 @@ def main():
 			normalizer = 1
 
 		audio_spec = generate_spectrogram_complex(segment_audio, opt.window_size, opt.hop_size, opt.n_fft)
-		audio_spec = torch.FloatTensor(audio_spec).unsqueeze(0)#.cuda()
+		audio_spec = torch.FloatTensor(audio_spec).unsqueeze(0)
 		#get mouthroi
 		frame_index_start = int(round((len(audio) - samples_per_window) / opt.audio_sampling_rate * 25)) - 1
 		segment_mouthroi = mouthroi[-opt.num_frames:, :, :]
 		segment_mouthroi = lipreading_preprocessing_func(segment_mouthroi)
-		segment_mouthroi = torch.FloatTensor(segment_mouthroi).unsqueeze(0).unsqueeze(0)#.cuda()
+		segment_mouthroi = torch.FloatTensor(segment_mouthroi).unsqueeze(0).unsqueeze(0)
 		reconstructed_signal = get_separated_audio(net_lipreading, net_facial_attributes, net_unet, audio_spec, segment_mouthroi, frames, opt)
 		reconstructed_signal = reconstructed_signal * normalizer
 		sep_audio[-samples_per_window:] = sep_audio[-samples_per_window:] + reconstructed_signal
@@ -230,7 +228,6 @@ def main():
 		#output separated audios
 		if not os.path.isdir(opt.output_dir_root):
 			os.mkdir(opt.output_dir_root)
-		# librosa.output.write_wav(os.path.join(opt.output_dir_root, 'speaker' + str(speaker_index+1) + '.wav'), avged_sep_audio, opt.audio_sampling_rate)
 		sf.write(os.path.join(opt.output_dir_root, 'speaker' + str(speaker_index+1) + '.wav'), avged_sep_audio, opt.audio_sampling_rate)
 
 if __name__ == '__main__':

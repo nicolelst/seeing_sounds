@@ -157,7 +157,6 @@ def main():
         csvfile.write('speaker' + str(i+1)+ ',0\n')
     csvfile.close()
 
-
     # save bbox results for video annotation use
     bbox_path = os.path.join(args.output_path, 'bbox')
     if not os.path.exists(bbox_path):
