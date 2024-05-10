@@ -199,7 +199,6 @@ export default function GetTranscriptDialog({
               </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col gap-y-2 max-h-96 overflow-y-auto px-2 mt-4">
-              {/* TODO dynamic height ? */}
               {fields.map((field, idx) => (
                 <div
                   key={field.id}

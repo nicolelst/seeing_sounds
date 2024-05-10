@@ -14,7 +14,6 @@ function App() {
   const [formStageNum, setFormStageNum] = useState(1);
   const [videoFilepath, setVideoFilepath] = useState<string>("");
   const [requestID, setRequestID] = useState<string>();
-  // TODO num stages & names should be calculated from a list of components
   const formStageNames = ["Upload video", "Adjust settings", "Done!"];
 
   function nextStage() {
@@ -84,7 +83,6 @@ function App() {
   };
 
   return (
-    // TODO: items-center dynamic sizes
     <div className="flex flex-col w-screen h-screen">
       <div className="flex flex-col h-full pt-12 space-y-2 mx-32 max-w-7xl">
         <Header />

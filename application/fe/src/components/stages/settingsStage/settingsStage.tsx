@@ -25,10 +25,6 @@ interface SettingsStageProps {
   errors: FieldErrors<VideoFormInputs>;
 }
 
-// TODO: Warning: validateDOMNesting(...): <button> cannot appear as a descendant of <button>.
-// for all settings except font slider ???
-// type="button": https://github.com/shadcn-ui/ui/issues/2358
-// asChild: https://github.com/shadcn-ui/ui/issues/2764
 
 export function SettingsStage({
   // register,
@@ -52,14 +48,14 @@ SettingsStageProps): ReactElement {
           <div className="flex flex-col gap-4">
             <SettingItem
               label="Select captioning interface"
-              // description="How should captions be displayed?"
+              description="How should captions be displayed?"
               error={undefined}
               // TODO add error
+              // TODO info button for interface preview/explanation
+              // TODO register annotationType
+              // TODO enable when options available
+              // TODO change value based on form
             >
-              {/* TODO info button for interface preview/explanation */}
-              {/* TODO register annotationType */}
-              {/* TODO enable when options available */}
-              {/* TODO change value based on form */}
               <InterfaceSelector
                 selectedValue={getValues("annotationType")}
                 setValue={setValue}
@@ -67,7 +63,7 @@ SettingsStageProps): ReactElement {
             </SettingItem>
             <SettingItem
               label="Font size"
-              // description="How large should captions be?"
+              description="How large should captions be?"
               error={undefined}
               // TODO add error
             >
@@ -79,7 +75,7 @@ SettingsStageProps): ReactElement {
             </SettingItem>
             <SettingItem
               label="Caption text colour"
-              // description="What colour should caption text be?"
+              description="What colour should caption text be?"
               error={undefined}
               // TODO add error
             >
@@ -95,7 +91,7 @@ SettingsStageProps): ReactElement {
             </SettingItem>
             <SettingItem
               label="Speaker colours"
-              // description="Click to select colours for each speaker."
+              description="Click to select colours for each speaker."
               error={undefined}
               // TODO add error
             >
@@ -103,25 +99,6 @@ SettingsStageProps): ReactElement {
             </SettingItem>
           </div>
         </SettingsAccordionItem>
-        {/* <SettingsAccordionItem
-					value="transcript"
-					header="Video transcript settings"
-				>
-					<div className="flex flex-col gap-4">
-						<SettingItem
-							label="Setting"
-							// description="desc"
-							error={undefined}
-							// errors.numSpeakers
-						>
-							<Input
-							// {...register("numSpeakers", {
-							// 	required: true,
-							// })}
-							/>
-						</SettingItem>
-					</div>
-				</SettingsAccordionItem> */}
         <SettingsAccordionItem
           value="speechSep"
           header="Speech separation model parameters"
@@ -129,7 +106,7 @@ SettingsStageProps): ReactElement {
           <div className="flex flex-col gap-4">
             <SettingItem
               label="Setting"
-              // description="desc"
+              description="desc"
               error={undefined}
               // errors.numSpeakers
             >
@@ -148,7 +125,7 @@ SettingsStageProps): ReactElement {
           <div className="flex flex-col gap-4">
             <SettingItem
               label="Setting"
-              // description="desc"
+              description="desc"
               error={undefined}
               // errors.numSpeakers
             >
