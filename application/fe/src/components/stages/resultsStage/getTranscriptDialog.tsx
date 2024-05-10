@@ -216,7 +216,6 @@ export default function GetTranscriptDialog({
                     placeholder={getDefaultSpeakerName(idx)}
                     {...register(`speakerInfo.${idx}.name`)}
                     // TODO display and handle errors: missing input
-                    // TODO max length limit
                   />
                 </div>
               ))}

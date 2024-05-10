@@ -49,9 +49,6 @@ export function SettingsStage({
 
   return (
     <div className="flex flex-col w-full h-full">
-      {/* TODO validation + error messages */}
-      {/* <input {...register("exampleRequired", { required: true })} />
-				{errors.exampleRequired && <span>This field is required</span>} */}
       <Accordion
         type="single"
         collapsible
@@ -64,7 +61,7 @@ export function SettingsStage({
               label="Select captioning interface"
               description="How should captions be displayed?"
               error={errors.annotationType}
-              // TODO info button for interface preview/explanation
+              // TODO add interface type preview/explanation
             >
               <InterfaceSelector
                 value={getValues("annotationType")}

@@ -52,14 +52,6 @@ def add_coloured_subtitles_to_video(
                 .set_position(("center", 0.8 + i * 0.05), relative=True) 
 
                 video_components.append(subtitle_clip) 
-        
-        ## TODO check if still needed, was for SubtitleClip
-        # added fix for inconsistent caption colour change - feb 14
-        # # TODO removing these 3 extra lines makes the colour not switch consistently
-        # if i == 0:
-        #     output_video = CompositeVideoClip([video_clip, subtitles])
-        #     output_video.write_videofile("temp.mp4") 
-        #     os.remove("temp.mp4")
 
     output_video = CompositeVideoClip(video_components)
     output_video.write_videofile(output_filepath, logger=None) 

@@ -34,7 +34,7 @@ type VideoFormInputs = {
 };
 
 export const NUM_SPEAKERS_MIN = 1;
-export const NUM_SPEAKERS_MAX = 10; // TODO max as per resolution and models?
+export const NUM_SPEAKERS_MAX = 10; 
 
 export type {
   AnnotationType,

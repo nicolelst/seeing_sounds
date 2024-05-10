@@ -92,7 +92,6 @@ export default function FileDropzone({
     error: {
       bgColour: "bg-red-300",
       text:
-        // TODO show file name: getValues not updated when invalid file
         errors.videoInput?.message ??
         "There was an unexpected issue. Please try again.",
       icon: <CrossCircledIcon className={iconStyle} />,
@@ -193,7 +192,6 @@ function NumSpeakersInput({
             pattern: /[0-9]+/,
             maxLength: 2, // 2 digit number
             setValueAs: (v) => parseInt(v),
-            // TODO auto populate based on first frame + face detection?
             onChange: (e) => {
               if (!e.target.value) {
                 setValue("numSpeakers", NUM_SPEAKERS_MIN);
