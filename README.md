@@ -5,9 +5,53 @@ Final Year Project submitted to the School of Computer Science and Engineering o
 
 // TODO: attach link to demo video
 
+## About this project 
+The World Health Organisation estimates that hearing loss will impact 2.5 billion people by 2050, and such conditions will be disabling for 10% of the global population. The growing demand for assistive technology for hearing impairment can be attributed to a globally ageing population and unsafe listening practices among young adults. 
+
+“Dinner table syndrome” describes the isolation faced by many deaf people due to difficulties engaging in group conversations with multiple non-signing hearing people. Participating in such conversations can be difficult for those with hearing loss due to the time required to process auditory inputs, reluctance to ask for repetition, and missing common verbal cues for turn-taking such as intonational change and pauses. The need to compensate for missing or unclear speech may require additional cognitive effort, which can lead to excess fatigue. As such, the exclusion of deaf people from avenues for bonding and socialisation, such as the dinner table, can result in isolation and loneliness.
+
+This project explores the design and implementation of an application which provides accessibility to hearing impaired users, specifically in the context of conversations involving multiple speakers. The proposed application differentiates itself from existing solutions for automated captioning, by identifying the active speaker in addition to providing captions for what is being said. After uploading a video, selecting an annotation interface and specifying other settings, the user is able to download an annotated video with captions for each speaker as well as a transcript. The application aims to reduce barriers to understanding group conversations for those with hearing loss, and could be used for recorded panel discussions, meetings, and interviews.
+
+## Directory structure
+```
+.
+├── application                                     # TODO desc
+│   ├── be                                          # desc
+│   │   ├── endpoints
+│   │   │   ├── ...
+│   │   │   └── main.py
+│   │   ├── utils
+│   │   ├── video_processing
+│   │   │   ├── annotation
+│   │   │   ├── transcript
+│   │   │   ├── VisualVoice
+│   │   │   ├── process_video.py
+│   │   │   ├── speech_recognition.py
+│   │   │   ├── speech_separation.py
+│   │   │   ├── video_preprocessing.py
+│   │   │   └── visual_voice_changes.md
+│   │   └── requirements.txt
+│   ├── fe                                          # desc
+│   │   ├── ...
+│   │   ├── src
+│   │   │   ├── ...
+│   │   │   ├── components
+│   │   │   ├── shadcn
+│   │   │   ├── App.tsx
+│   │   │   └── main.tsx
+│   │   └── vite.config.ts
+│   ├── port_config.json
+│   └── run_application.sh
+├── speaker_diarization
+│   ├── TODO                                        # description
+│   └── README.md
+├── .gitignore
+└── README.md
+```
+
 
 ## Frontend (React JS)
-*see application/fe*
+*see `application/fe`*
 
 Web page developed with [React Vite](https://vitejs.dev/) using components from [shadcn/ui](https://ui.shadcn.com/)
 
@@ -19,7 +63,7 @@ pnpm update
 ```
 
 ## Backend (Python)
-*see application/be*
+*see `application/be`*
 
 Backend built with [FastAPI](https://fastapi.tiangolo.com/) in Python 3.8.9. A list of packages and versions used can be found in [requirements.txt](./application/be/requirements.txt).
 
