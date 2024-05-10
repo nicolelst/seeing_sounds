@@ -18,7 +18,7 @@ import { TranscriptFormInputs } from "@/types/transcriptFormInputs";
 import { Progress } from "@/shadcn/components/ui/progress";
 import { Label } from "@/shadcn/components/ui/label";
 import { DownloadIcon } from "lucide-react";
-import { DOWNLOAD_TRANSCRIPT_URL } from "@/routes";
+import { DOWNLOAD_TRANSCRIPT_URL } from "@/constants/routes";
 import downloadFile from "./downloadFile";
 
 interface GetTranscriptDialogProps {

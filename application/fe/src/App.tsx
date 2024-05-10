@@ -8,7 +8,7 @@ import {
 } from "./components/stages";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { VideoFormInputs } from "./types/videoFormInputs";
-import { UPLOAD_VIDEO_URL } from "./routes";
+import { UPLOAD_VIDEO_URL } from "./constants/routes";
 
 function App() {
   const [formStageNum, setFormStageNum] = useState(1);

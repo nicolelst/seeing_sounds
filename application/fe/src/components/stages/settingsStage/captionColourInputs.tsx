@@ -9,7 +9,7 @@ import {
 } from "@/shadcn/components/ui/popover";
 import { TwitterPicker } from "react-color";
 import { VideoFormInputs } from "@/types/videoFormInputs";
-import { DEFAULT_HEX_10 } from "@/types/colourInfo";
+import { DEFAULT_HEX_10 } from "@/constants/defaultColours";
 
 interface CaptionColourInputsProps {
   getValues: UseFormGetValues<VideoFormInputs>;

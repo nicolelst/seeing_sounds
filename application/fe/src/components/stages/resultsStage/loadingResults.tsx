@@ -2,14 +2,10 @@ import { ReactElement, useEffect, useState } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 
 import { Button } from "@/shadcn/components/ui/button";
-import {
-  FileTextIcon,
-  GitHubLogoIcon,
-  InfoCircledIcon,
-} from "@radix-ui/react-icons";
 import ProcessingStatusCarousel from "./processingStatusCarousel";
 import { processingStatus } from "@/types/processingStatus";
-import { WEBSOCKET_BASE_URL } from "@/routes";
+import { WEBSOCKET_BASE_URL } from "@/constants/routes";
+import { linkInfoMap } from "@/constants/linkInfoMap";
 
 interface LoadingResultsProps {
   requestID: string;
@@ -70,18 +66,19 @@ export default function LoadingResults({
           </p>
           <div className="flex flex-col gap-y-2 items-start justify-center text-lg font-semibold">
             <p className="mt-4">In the meantime, check out these links:</p>
-            <Button variant="link" className="text-base underline">
-              <InfoCircledIcon className="mr-2 h-6 w-6" />
-              More about this FYP
-            </Button>
-            <Button variant="link" className="text-base underline">
-              <FileTextIcon className="mr-2 h-6 w-6" />
-              Read the final report
-            </Button>
-            <Button variant="link" className="text-base underline">
-              <GitHubLogoIcon className="mr-2 h-6 w-6" />
-              View the code on Github
-            </Button>
+            {Object.entries(linkInfoMap).map((info, idx) => (
+              <Button
+                key={idx}
+                variant="link"
+                className="text-base underline"
+                asChild
+              >
+                <a href={info[1].link} target="_blank">
+                  {info[1].icon("lg")}
+                  {info[1].desc}
+                </a>
+              </Button>
+            ))}
           </div>
         </div>
       </div>

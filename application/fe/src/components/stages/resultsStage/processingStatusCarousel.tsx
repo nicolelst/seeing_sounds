@@ -8,10 +8,8 @@ import {
   CarouselNext,
   CarouselApi,
 } from "@/shadcn/components/ui/carousel";
-import {
-  processingStatus,
-  processingStatusMap,
-} from "@/types/processingStatus";
+import { processingStatus } from "@/types/processingStatus";
+import { processingStatusMap } from "@/constants/processingStatusMap";
 
 interface ProcessingStatusCarouselProps {
   status: processingStatus;

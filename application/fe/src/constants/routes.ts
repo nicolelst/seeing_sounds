@@ -1,4 +1,4 @@
-import portConfig from "../../port_config.json";
+import portConfig from "../../../port_config.json";
 
 const API_ORIGIN = `http://localhost:${portConfig.be}/`;
 const UPLOAD_VIDEO_URL = API_ORIGIN + "upload_video";

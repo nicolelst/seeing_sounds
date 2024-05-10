@@ -7,7 +7,7 @@ import ReactPlayer from "react-player";
 import { annotationType, annotationTypeMap } from "@/types/annotationType";
 import GetTranscriptButton from "./getTranscriptButton";
 import SpeakerListDisplay from "./speakerListDisplay";
-import { DOWNLOAD_VIDEO_URL } from "@/routes";
+import { DOWNLOAD_VIDEO_URL } from "@/constants/routes";
 import downloadFile from "./downloadFile";
 
 interface CompleteResultsProps {
