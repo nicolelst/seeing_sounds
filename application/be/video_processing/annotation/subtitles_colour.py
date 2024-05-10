@@ -43,8 +43,8 @@ def add_coloured_subtitles_to_video(
                 subtitle_clip = TextClip(
                     txt= chunks["text"][j],
                     font= 'Georgia-Regular',
-                    fontsize= 32,
-                    color= "white",
+                    fontsize= video_settings.font_size,
+                    color= video_settings.text_colour.as_rgb().replace(" ", ""),
                     bg_color= video_settings.colour_list[i].as_rgb().replace(" ", ""),
                     method= "label"
                 ).set_start(chunks["time_start"][j])\

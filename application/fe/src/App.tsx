@@ -50,7 +50,11 @@ function App() {
     data: VideoFormInputs
   ) => {
     // TODO add other settings to queryURL
-    const queryURL = `${UPLOAD_VIDEO_URL}?annotation_type=${encodeURIComponent(
+    const queryURL = `${UPLOAD_VIDEO_URL}?text_colour=${encodeURIComponent(
+      data.captionTextColour
+    )}&font_size=${encodeURIComponent(
+      data.fontSize
+    )}&annotation_type=${encodeURIComponent(
       data.annotationType
     )}&num_speakers=${encodeURIComponent(
       data.numSpeakers

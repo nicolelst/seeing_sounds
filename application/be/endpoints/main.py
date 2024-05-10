@@ -45,7 +45,7 @@ def read_root():
     return {"Hello": "World", "Seeing": "Sounds"}
 
 @app.post(Routes.POST_UPLOAD_VIDEO, status_code=202)
-async def upload_video(video: UploadFile, annotation_type: AnnotationInterface, num_speakers: int, colour_list_str: Union[str, None] = ""):
+async def upload_video(video: UploadFile, annotation_type: AnnotationInterface, text_colour: str, font_size: int, num_speakers: int, colour_list_str: Union[str, None] = ""):
     # https://fastapi.tiangolo.com/tutorial/request-files/ 
     # settings in query params, video file in request body - https://github.com/tiangolo/fastapi/issues/2257#issuecomment-717522156
 
@@ -58,11 +58,16 @@ async def upload_video(video: UploadFile, annotation_type: AnnotationInterface, 
     if annotation_type != AnnotationInterface.TRADITIONAL and len(colour_list) < num_speakers:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Insufficient colours ({len(colour_list)}) specified for {num_speakers} speakers: {video.colour_list}")
     try: 
+        text_col = Color(text_colour)
+    except: 
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Error parsing text colour: {text_colour}")
+    try: 
+        text_colour = Color(text_colour)
         colour_list = [Color(c) for c in colour_list]
     except: 
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Error parsing colours: {colour_list}")
 
-    video_settings = VideoSettings(annotation_type=annotation_type, colour_list=colour_list, num_speakers=num_speakers)
+    video_settings = VideoSettings(annotation_type=annotation_type, text_colour=text_col, font_size=font_size, colour_list=colour_list, num_speakers=num_speakers)
 
     # assign request ID and create directory
     request_id = str(uuid.uuid4())

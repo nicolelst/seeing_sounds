@@ -25,7 +25,11 @@ export default function CaptionColourInputs({
   const getColour = (idx: number) => getValue(idx) ?? DEFAULT_HEX_10[idx];
 
   const [bgColours, setBgColours] = useState<Array<string>>(
-    Array.from(Array(numSpeakers).keys()).map((idx) => getColour(idx))
+    Array.from(Array(numSpeakers).keys()).map((idx) => {
+      const col = getColour(idx);
+      updateValue(col, idx); // set defaults on first render
+      return col;
+    })
   );
 
   return (
