@@ -57,26 +57,22 @@ function App() {
   const onSubmit: SubmitHandler<VideoFormInputs> = async (
     data: VideoFormInputs
   ) => {
-    // TODO add other settings to queryURL
-    const queryURL = `${UPLOAD_VIDEO_URL}?text_colour=${encodeURIComponent(
-      data.captionTextColour
-    )}&font_size=${encodeURIComponent(
-      data.fontSize
-    )}&annotation_type=${encodeURIComponent(
-      data.annotationType
-    )}&num_speakers=${encodeURIComponent(
-      data.numSpeakers
-    )}&colour_list_str=${encodeURIComponent(
-      data.speakerColours.join(";")
-    )}&hop_length=${encodeURIComponent(
-      data.hopLength
-    )}&num_ident_frames=${encodeURIComponent(
-      data.numIdentityFrames
-    )}&visual_feat=${encodeURIComponent(
-      data.visualFeatures
-    )}&model_size=${encodeURIComponent(
-      data.speechRecModel
-    )}&eng_only${encodeURIComponent(data.englishOnly)}`;
+    const queryParams = {
+      text_colour: data.captionTextColour,
+      font_size: data.fontSize,
+      annotation_type: data.annotationType,
+      num_speakers: data.numSpeakers,
+      colour_list_str: data.speakerColours.join(";"),
+      hop_length: data.hopLength,
+      num_ident_frames: data.numIdentityFrames,
+      visual_feat: data.visualFeatures,
+      model_size: data.speechRecModel,
+      eng_only: data.englishOnly,
+    };
+    const paramStr = Object.entries(queryParams)
+      .map((param) => `${param[0]}=${encodeURIComponent(param[1])}`)
+      .join("&");
+    const queryURL = `${UPLOAD_VIDEO_URL}?${paramStr}`;
 
     console.log("POST", queryURL);
     console.log("settings:", getValues());

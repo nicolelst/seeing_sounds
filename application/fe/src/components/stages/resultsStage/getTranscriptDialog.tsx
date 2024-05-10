@@ -76,13 +76,15 @@ export default function GetTranscriptDialog({
     };
 
     // GET request for transcript
-    const queryURL = `${DOWNLOAD_TRANSCRIPT_URL}?request_id=${encodeURIComponent(
-      requestID
-    )}&speaker_names=${encodeURIComponent(
-      data.speakerInfo.map((info) => info.name).join(";")
-    )}&speaker_colours=${encodeURIComponent(
-      data.speakerInfo.map((info) => info.colour).join(";")
-    )}`;
+    const queryParams = {
+      request_id: requestID,
+      speaker_names: data.speakerInfo.map((info) => info.name).join(";"),
+      speaker_colours: data.speakerInfo.map((info) => info.colour).join(";"),
+    };
+    const paramStr = Object.entries(queryParams)
+      .map((param) => `${param[0]}=${encodeURIComponent(param[1])}`)
+      .join("&");
+    const queryURL = `${DOWNLOAD_TRANSCRIPT_URL}?${paramStr}`;
 
     console.log("GET", queryURL);
     setIsLoading(true);
