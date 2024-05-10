@@ -11,6 +11,12 @@ Final Year Project submitted to the School of Computer Science and Engineering o
 
 Web page developed with [React Vite](https://vitejs.dev/) using components from [shadcn/ui](https://ui.shadcn.com/)
 
+Install dependencies and update packages
+```
+cd application/fe
+pnpm install
+pnpm update
+```
 
 ## Backend (Python)
 *see application/be*
