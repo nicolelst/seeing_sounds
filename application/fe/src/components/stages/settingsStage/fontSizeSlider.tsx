@@ -1,46 +1,39 @@
 import { ReactElement } from "react";
-import {
-  UseFormGetValues,
-  UseFormSetValue,
-  UseFormWatch,
-} from "react-hook-form";
 import { Slider } from "@/shadcn/components/ui/slider";
-import { VideoFormInputs } from "@/types/videoFormInputs";
+import {
+  FONTSIZE_PT_INTERVAL,
+  FONTSIZE_PT_MAX,
+  FONTSIZE_PT_MIN,
+  FontSize,
+} from "@/types/videoFormInputs";
+import {
+  fontSizeFormatMap,
+  fontSizePtMap,
+} from "@/constants/fontSizeFormatMap";
 
 interface FontSizeSliderProps {
-  getValues: UseFormGetValues<VideoFormInputs>;
-  setValue: UseFormSetValue<VideoFormInputs>;
-  watch: UseFormWatch<VideoFormInputs>;
+  value: FontSize;
+  updateValue: (newValue: FontSize) => void;
 }
 
 export default function FontSizeSlider({
-  getValues,
-  setValue,
-  watch,
+  value,
+  updateValue,
 }: FontSizeSliderProps): ReactElement {
-  const fontSizeMap: Record<number, [string, string]> = {
-    18: ["text-sm", "Small"],
-    24: ["text-base", "Default"],
-    30: ["text-xl", "Large"],
-    36: ["text-2xl", "Giant"],
-  };
-
   return (
     <div className="h-9 grid grid-cols-4">
       <p
-        className={`col-span-1 flex items-center ${
-          fontSizeMap[watch("fontSize")][0]
-        }`}
+        className={`col-span-1 flex items-center ${fontSizeFormatMap[value][1]}`}
       >
-        {fontSizeMap[watch("fontSize")][1]}
+        {value}
       </p>
       <Slider
         className="col-span-3"
-        defaultValue={[getValues("fontSize")]}
-        min={18}
-        max={36}
-        step={6}
-        onValueChange={(value) => setValue("fontSize", value[0])}
+        defaultValue={[fontSizeFormatMap[value][0]]}
+        min={FONTSIZE_PT_MIN}
+        max={FONTSIZE_PT_MAX}
+        step={FONTSIZE_PT_INTERVAL}
+        onValueChange={(newValue) => updateValue(fontSizePtMap[newValue[0]][0])}
       />
     </div>
   );

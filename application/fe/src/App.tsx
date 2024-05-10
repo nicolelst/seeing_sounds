@@ -9,6 +9,7 @@ import {
 import { useForm, SubmitHandler } from "react-hook-form";
 import { VideoFormInputs } from "./types/videoFormInputs";
 import { UPLOAD_VIDEO_URL } from "./constants/routes";
+import { fontSizeFormatMap } from "./constants/fontSizeFormatMap";
 
 function App() {
   const [formStageNum, setFormStageNum] = useState(1);
@@ -40,8 +41,8 @@ function App() {
   } = useForm<VideoFormInputs>({
     defaultValues: {
       annotationType: "floating",
-      fontSize: 24,
-      captionBlackText: false,
+      fontSize: fontSizeFormatMap.Default[0],
+      captionTextColour: "white",
     },
   });
 

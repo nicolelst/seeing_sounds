@@ -1,5 +1,4 @@
 import { ReactElement } from "react";
-import { UseFormSetValue } from "react-hook-form";
 import {
   Select,
   SelectTrigger,
@@ -9,26 +8,23 @@ import {
   SelectItem,
 } from "@/shadcn/components/ui/select";
 import { annotationType, annotationTypeMap } from "@/types/annotationType";
-import { VideoFormInputs } from "@/types/videoFormInputs";
 
 interface InterfaceSelectorProps {
   disabled?: boolean;
-  selectedValue?: annotationType;
-  setValue: UseFormSetValue<VideoFormInputs>;
+  value?: annotationType;
+  updateValue: (newValue: annotationType) => void;
 }
 
 export default function InterfaceSelector({
   disabled,
-  selectedValue,
-  setValue,
+  value = "floating",
+  updateValue,
 }: InterfaceSelectorProps): ReactElement {
   return (
     <Select
       disabled={disabled ?? false}
-      defaultValue={selectedValue ?? "floating"}
-      onValueChange={(value) =>
-        setValue("annotationType", value as annotationType)
-      }
+      defaultValue={value}
+      onValueChange={(newValue) => updateValue(newValue as annotationType)}
     >
       <SelectTrigger type="button">
         <SelectValue placeholder="Select an interface" />

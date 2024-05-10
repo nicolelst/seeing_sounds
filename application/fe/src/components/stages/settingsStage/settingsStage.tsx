@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactElement, useCallback } from "react";
 import {
   UseFormRegister,
   FieldErrors,
@@ -16,6 +16,10 @@ import FontSizeSlider from "./fontSizeSlider";
 import InterfaceSelector from "./interfaceSelector";
 import SettingsAccordionItem from "./settingsAccordionItem";
 import SettingItem from "./settingItem";
+import {
+  fontSizeFormatMap,
+  fontSizePtMap,
+} from "@/constants/fontSizeFormatMap";
 
 interface SettingsStageProps {
   register: UseFormRegister<VideoFormInputs>;
@@ -25,14 +29,15 @@ interface SettingsStageProps {
   errors: FieldErrors<VideoFormInputs>;
 }
 
-
 export function SettingsStage({
   // register,
   getValues,
   setValue,
   watch,
-}: // errors,
-SettingsStageProps): ReactElement {
+  errors,
+}: SettingsStageProps): ReactElement {
+  const capitalize = (str: string) => str[0].toUpperCase() + str.slice(1);
+
   return (
     <div className="flex flex-col w-full h-full">
       {/* TODO validation + error messages */}
@@ -49,53 +54,58 @@ SettingsStageProps): ReactElement {
             <SettingItem
               label="Select captioning interface"
               description="How should captions be displayed?"
-              error={undefined}
-              // TODO add error
+              error={errors.annotationType}
               // TODO info button for interface preview/explanation
-              // TODO register annotationType
-              // TODO enable when options available
-              // TODO change value based on form
             >
               <InterfaceSelector
-                selectedValue={getValues("annotationType")}
-                setValue={setValue}
+                value={getValues("annotationType")}
+                updateValue={(newValue) => setValue("annotationType", newValue)}
               />
             </SettingItem>
             <SettingItem
               label="Font size"
               description="How large should captions be?"
-              error={undefined}
-              // TODO add error
+              error={errors.fontSize}
             >
               <FontSizeSlider
-                getValues={getValues}
-                setValue={setValue}
-                watch={watch}
+                value={fontSizePtMap[watch("fontSize")][0]}
+                updateValue={(newValue) =>
+                  setValue("fontSize", fontSizeFormatMap[newValue][0])
+                }
               />
             </SettingItem>
             <SettingItem
               label="Caption text colour"
               description="What colour should caption text be?"
-              error={undefined}
-              // TODO add error
+              error={errors.captionTextColour}
             >
               <div className="flex items-center space-x-2">
                 <Switch
-                  checked={getValues("captionBlackText")}
-                  onCheckedChange={(value) =>
-                    setValue("captionBlackText", value)
+                  checked={getValues("captionTextColour") == "black"}
+                  onCheckedChange={(newValue) =>
+                    setValue("captionTextColour", newValue ? "black" : "white")
                   }
                 />
-                <p>{watch("captionBlackText") ? "Black" : "White"}</p>
+                <p>{capitalize(watch("captionTextColour"))}</p>
               </div>
             </SettingItem>
             <SettingItem
               label="Speaker colours"
               description="Click to select colours for each speaker."
-              error={undefined}
-              // TODO add error
+              error={errors.speakerColours}
             >
-              <CaptionColourInputs getValues={getValues} setValue={setValue} />
+              <CaptionColourInputs
+                getValue={(idx) => {
+                  return getValues(`speakerColours.${idx}`);
+                }}
+                updateValue={useCallback(
+                  (newValue, idx) =>
+                    setValue(`speakerColours.${idx}`, newValue),
+                  [setValue]
+                )}
+                numSpeakers={getValues("numSpeakers")}
+                captionTextColour={getValues("captionTextColour")}
+              />
             </SettingItem>
           </div>
         </SettingsAccordionItem>

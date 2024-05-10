@@ -1,5 +1,4 @@
-import { ReactElement, useEffect, useState } from "react";
-import { UseFormGetValues, UseFormSetValue } from "react-hook-form";
+import { ReactElement, useState } from "react";
 import { Badge } from "@/shadcn/components/ui/badge";
 import { Label } from "@/shadcn/components/ui/label";
 import {
@@ -8,56 +7,50 @@ import {
   PopoverContent,
 } from "@/shadcn/components/ui/popover";
 import { TwitterPicker } from "react-color";
-import { VideoFormInputs } from "@/types/videoFormInputs";
 import { DEFAULT_HEX_10 } from "@/constants/defaultColours";
 
 interface CaptionColourInputsProps {
-  getValues: UseFormGetValues<VideoFormInputs>;
-  setValue: UseFormSetValue<VideoFormInputs>;
+  getValue: (idx: number) => string | undefined;
+  updateValue: (newValue: string, idx: number) => void;
+  numSpeakers: number;
+  captionTextColour: "black" | "white";
 }
 
 export default function CaptionColourInputs({
-  getValues,
-  setValue,
+  getValue,
+  updateValue,
+  numSpeakers,
+  captionTextColour,
 }: CaptionColourInputsProps): ReactElement {
-  const [hexColours, setHexColours] = useState<Array<string>>(
-    DEFAULT_HEX_10.slice(0, getValues("numSpeakers"))
-  );
+  const getColour = (idx: number) => getValue(idx) ?? DEFAULT_HEX_10[idx];
 
-  useEffect(() => {
-    setValue("speakerColours", hexColours);
-  }, [hexColours, setValue]);
+  const [bgColours, setBgColours] = useState<Array<string>>(
+    Array.from(Array(numSpeakers).keys()).map((idx) => getColour(idx))
+  );
 
   return (
     <div className="flex flex-col gap-2">
       <div className="flex flex-row gap-1.5 flex-wrap">
-        {Array.from({ length: getValues("numSpeakers") }).map((_item, idx) => (
-          <Popover key={idx + 1}>
+        {Array.from({ length: numSpeakers }).map((_item, idx) => (
+          <Popover key={idx + 1} modal>
             <PopoverTrigger>
               <Badge
-                style={{ backgroundColor: hexColours[idx] }}
+                style={{ backgroundColor: bgColours[idx] }}
                 className={`rounded-full ${
-                  getValues("captionBlackText") ? "text-black" : "text-white"
+                  captionTextColour == "black" ? "text-black" : "text-white"
                 }`}
               >
                 Speaker {idx + 1}
               </Badge>
             </PopoverTrigger>
-            <PopoverContent className="flex flex-col gap-1.5 w-fit">
+            <PopoverContent className="flex flex-col gap-1.5 w-fit mt-1">
               <Label>Select colour for Speaker {idx + 1}</Label>
               <TwitterPicker
                 triangle="hide"
-                color={hexColours[idx]}
+                color={getColour(idx)}
                 onChange={(newC) => {
-                  setHexColours(
-                    hexColours.map((hex, i) => {
-                      if (i === idx) {
-                        return newC.hex;
-                      } else {
-                        return hex;
-                      }
-                    })
-                  );
+                  updateValue(newC.hex, idx);
+                  setBgColours(bgColours.map((_col, idx) => getColour(idx)));
                 }}
               />
             </PopoverContent>

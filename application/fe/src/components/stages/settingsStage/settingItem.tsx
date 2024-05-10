@@ -1,5 +1,5 @@
 import { ReactNode, ReactElement } from "react";
-import { FieldError } from "react-hook-form";
+import { FieldError, Merge } from "react-hook-form";
 import { Label } from "@/shadcn/components/ui/label";
 import {
   Tooltip,
@@ -14,7 +14,7 @@ interface SettingItemProps {
   description: string;
   children: ReactNode;
   triggerAsChild?: boolean;
-  error: FieldError | undefined;
+  error: Merge<FieldError, (FieldError | undefined)[]> | undefined;
 }
 
 export default function SettingItem({
@@ -37,14 +37,18 @@ export default function SettingItem({
               )}
             </TooltipTrigger>
             <TooltipContent
-              className={`ml-2 border text-sm text-wrap break-words hyphens-auto max-w-60 ${
+              className={`py-2 px-3 border ${
                 error
                   ? "border-red-200 bg-red-100 text-red-600"
-                  : "border-gray-300 bg-gray-100 text-slate-700"
+                  : "border-slate-200 bg-slate-900 text-white"
               }`}
               side="bottom"
             >
-              <p>{error ? error.message : description}</p>
+              <div className="max-w-60 text-balance break-words">
+                <p className="inline text-sm hyphens-auto ">
+                  {error ? error.message : description}
+                </p>
+              </div>
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
