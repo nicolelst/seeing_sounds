@@ -55,6 +55,11 @@ pip install setuptools-rust
 pip install -U openai-whisper
 ```
 
+Install requirements for generating transcript as word document (.docx)
+```
+pip install python-docx
+```
+
 
 ## Running the application 
 Port numbers are specified in [port_config.json](./application/port_config.json).

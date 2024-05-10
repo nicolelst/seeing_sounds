@@ -10,7 +10,6 @@ from fastapi import FastAPI, HTTPException, status, UploadFile, WebSocket, WebSo
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 # from fastapi.testclient import TestClient
-from pydantic import BaseModel
 from pydantic.color import Color
 
 sys.path.insert(0, '..')
@@ -22,7 +21,9 @@ from utils.annotation_types import AnnotationInterface
 from utils.path_constants import ANNOTATED_VIDEO_NAME, STORAGE_DIR, THUMBNAIL_DIR_NAME
 from utils.video_name_constants import get_annotation_type, get_input_video_filename
 from utils.video_settings import VideoSettings
+from utils.speaker_info import Speaker_Info
 from video_processing.process_video import process_video
+from video_processing.transcript.generate_transcript import generate_transcript
 
 
 app = FastAPI()
@@ -207,10 +208,6 @@ async def get_annotated_video(request_id: str):
     )
     return response
 
-class Speaker_Info(BaseModel): 
-    name: str
-    colour: Color
-
 @app.get(Routes.GET_TRANSCRIPT)
 async def get_transcript(request_id: str, speaker_names: str, speaker_colours: str):
     if not proc_thread_mgr.is_valid(request_id):
@@ -229,10 +226,24 @@ async def get_transcript(request_id: str, speaker_names: str, speaker_colours: s
     except: 
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Error parsing colours: {speaker_colour_list}")
 
-
-    # TODO generate transcript and return
     info = []
     for i in range(len(speaker_name_list)):
         s = Speaker_Info(name=speaker_name_list[i], colour=speaker_colour_list[i])
         info.append(s)
-    return {"request_id": request_id, "speaker_info": info}
+    
+    transcript_filepath = generate_transcript(
+        request_id=request_id, 
+        speaker_info=info
+    )
+    response = FileResponse(
+        path = transcript_filepath,
+        headers = {
+            "request_id": request_id, 
+            "speaker_info": info,
+            "content-disposition": "attachment"
+        },
+        media_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        filename = transcript_filepath.split("/")[-1]
+    )
+
+    return response
