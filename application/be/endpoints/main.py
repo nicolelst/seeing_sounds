@@ -161,7 +161,7 @@ async def get_annotated_video(request_id: str):
     # HTTP problem details JSON format as per https://www.rfc-editor.org/rfc/rfc7807#section-3.1
     if not proc_thread_mgr.is_valid(request_id):
         # invalid request id
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invalid request_id. The server has never received a request with ID [{request_id}].")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Invalid request_id. The server has never received a request with ID [{request_id}].")
     
     if proc_thread_mgr.is_in_progress(request_id):
         # request still in progress
@@ -212,7 +212,7 @@ async def get_annotated_video(request_id: str):
 async def get_transcript(request_id: str, speaker_names: str, speaker_colours: str):
     if not proc_thread_mgr.is_valid(request_id):
         # invalid request id
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Invalid request_id. The server has never received a request with ID [{request_id}].")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Invalid request_id. The server has never received a request with ID [{request_id}].")
 
     # parse speaker info
     speaker_name_list = speaker_names.split(";")
@@ -222,15 +222,15 @@ async def get_transcript(request_id: str, speaker_names: str, speaker_colours: s
     if len(speaker_name_list) != len(speaker_colour_list):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Inconsistent number of speaker names ({len(speaker_name_list)}) and colours ({len(speaker_name_list)}): {speaker_name_list}, {speaker_colour_list}")
     try: 
-        colour_list = [Color(c) for c in colour_list]
+        colour_list = [Color(c) for c in speaker_colour_list]
     except: 
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Error parsing colours: {speaker_colour_list}")
 
     info = []
     for i in range(len(speaker_name_list)):
-        s = Speaker_Info(name=speaker_name_list[i], colour=speaker_colour_list[i])
+        s = Speaker_Info(name=speaker_name_list[i], colour=colour_list[i])
         info.append(s)
-    
+            
     transcript_filepath = generate_transcript(
         request_id=request_id, 
         speaker_info=info
@@ -239,7 +239,7 @@ async def get_transcript(request_id: str, speaker_names: str, speaker_colours: s
         path = transcript_filepath,
         headers = {
             "request_id": request_id, 
-            "speaker_info": info,
+            "speaker_info": str([{"id": i+1, "name":info[i].name, "colour": info[i].colour.as_hex()} for i in range(len(info))]),
             "content-disposition": "attachment"
         },
         media_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document",

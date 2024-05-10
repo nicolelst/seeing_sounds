@@ -8,6 +8,7 @@ import { annotationType, annotationTypeMap } from "@/types/annotationType";
 import GetTranscriptButton from "./getTranscriptButton";
 import SpeakerListDisplay from "./speakerListDisplay";
 import { DOWNLOAD_VIDEO_URL } from "@/routes";
+import downloadFile from "./downloadFile";
 
 interface CompleteResultsProps {
   requestID: string;
@@ -106,18 +107,6 @@ export default function CompleteResults({
     getResults();
   }, [processResponse, requestID]);
 
-  const downloadFile = (url: string, filename: string, filetype: string) => {
-    // https://stackoverflow.com/a/63965930
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = filename;
-    link.type = filetype;
-
-    document.body.appendChild(link); // append html link element to page
-    link.click(); // start download
-    link.parentNode?.removeChild(link); // clean up and remove link
-  };
-
   const downloadVideo = () =>
     downloadFile(
       videoURL,
@@ -166,6 +155,7 @@ export default function CompleteResults({
           <Button
             type="button"
             className="py-6 text-md"
+            disabled={!videoURL}
             onClick={downloadVideo}
           >
             <VideoIcon className="mr-2 h-5 w-5" />
@@ -173,6 +163,7 @@ export default function CompleteResults({
           </Button>
           <GetTranscriptButton
             requestID={requestID}
+            filename={filename}
             speakerThumbnailURLs={thumbnailURLs}
             speakerColours={speakerColours}
             numSpeakers={numSpeakers}

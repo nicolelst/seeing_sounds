@@ -8,7 +8,7 @@ from video_processing.transcript.transcript_iterator import Transcript_Iterator
 
 
 def generate_transcript(request_id: str, speaker_info: List[Speaker_Info]):
-    def add_paragraph(text: str, bold: bool = False, italic: bool = False, underline: bool = False, rgb: Tuple[int, int, int] = None, fontsize:int = None, indent:float = 0):
+    def add_paragraph(text: str, bold: bool = False, italic: bool = False, underline: bool = False, rgb: Tuple[int, int, int] = None, fontsize:int = 12, indent:float = 0):
         para = document.add_paragraph()
         run = para.add_run(text)
 
@@ -18,14 +18,13 @@ def generate_transcript(request_id: str, speaker_info: List[Speaker_Info]):
 
         para.paragraph_format.left_indent = Inches(indent)
 
-        if fontsize != None:
-            run.font.size = Pt(fontsize)
+        run.font.size = Pt(fontsize)
         
         if rgb != None: 
             run.font.color.rgb = RGBColor(rgb[0], rgb[1], rgb[2])
     
     def add_speaker_header(idx: int):
-        add_paragraph(speaker_info[idx].name.upper(), rgb=speaker_info[idx].colour.as_rgb_tuple(), underline=True, fontsize=14)
+        add_paragraph(speaker_info[idx].name.upper(), rgb=speaker_info[idx].colour.as_rgb_tuple(), bold=True, fontsize=14)
     
     def add_section_header(text: str):
         add_paragraph(text, bold=True, underline=True, fontsize=18)
@@ -34,7 +33,7 @@ def generate_transcript(request_id: str, speaker_info: List[Speaker_Info]):
 
     add_paragraph('Seeing Sounds Transcript', bold=True, fontsize=26) 
     add_paragraph("This transcript was automatically genarated by Seeing Sounds.", italic=True)
-    add_paragraph(f"Request ID: {request_id}", italic=True)
+    add_paragraph(f"Request ID:\t{request_id}", italic=True, rgb=(136, 136, 136))
 
     add_section_header('Speakers')
     speaker_images = get_speaker_thumbnail_filepaths(request_id)
@@ -57,7 +56,7 @@ def generate_transcript(request_id: str, speaker_info: List[Speaker_Info]):
                 # add segment to doc
                 add_speaker_header(i)
                 add_paragraph(seg["text"], indent=0.5)
-                add_paragraph(f'({seg["start"]:.2f}s - {seg["end"]:.2f}s)', indent=0.5, italic=True)
+                add_paragraph(f'({seg["start"]:.2f}s - {seg["end"]:.2f}s)', indent=0.5, italic=True, rgb=(136, 136, 136))
                 next_segments[i] = next(transcripts[i])
     
     output_filepath = get_output_transcript_filename(request_id)
