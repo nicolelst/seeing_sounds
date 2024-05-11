@@ -45,7 +45,7 @@ app.add_middleware(
 def read_root():
     return {"Hello": "World", "Seeing": "Sounds"}
 
-@app.post(Routes.POST_UPLOAD_VIDEO, status_code=202)
+@app.post(Routes.POST_UPLOAD_VIDEO, status_code=status.HTTP_202_ACCEPTED)
 async def upload_video(
     video: UploadFile, 
     annotation_type: AnnotationInterface, text_colour: str, font_size: int, num_speakers: int, colour_list_str: Union[str, None] = "", 

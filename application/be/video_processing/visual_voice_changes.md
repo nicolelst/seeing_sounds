@@ -12,7 +12,7 @@ The following VisualVoice directories were left out of this repo.
 * `VisualVoice/av-separation-with-context`
 
 ## Download pretrained model weights
-See [instructions in README.md](../../../README.md#Download-VisualVoice-pretrained-models) to create `pretrained_models` directory. No changes were made to the model architecture and weights provided.
+See [instructions in README.md](../../../README.md#VisualVoice-pretrained-models) to create `pretrained_models` directory. No changes were made to the model architecture and weights provided.
 
 ## Save face detection results 
 Save bounding boxes from face detector (video preprocessing stage) as `.npz` file, which is a zipped archive of files containing numpy variables. This result is used for video annotation later.

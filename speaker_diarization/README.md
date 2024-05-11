@@ -36,9 +36,9 @@ HF_TOKEN = "YOUR TOKEN HERE"
 Input: video + microphone stream (live)
 
 Output: annotated video stream 
-* face landmarks (via MediaPipe)
-* voice activity detector output (via webrtcvad)
-* whether speaker is active (vad detects speech and mouth is open)
+* facial landmarks (via MediaPipe FaceMesh)
+* voice activity detector output (via  WebRTC Voice Activity Detector)
+* whether speaker is active (speech detected and mouth is open)
 
 Configure settings in [`mediapipe_config.py`](./mediapipe_config.py).
 
