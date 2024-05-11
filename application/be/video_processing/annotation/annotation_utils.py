@@ -11,7 +11,6 @@ def add_bbox_to_video(
     num_speakers = len(bbox_npz_list)
     bbox_iter_lists = [iter(np.load(bbox_npz)["data"]) for bbox_npz in bbox_npz_list]
     
-    # TODO average for segment?
     def add_bbox(frame):
         try:
             for i in range(num_speakers): 
@@ -49,7 +48,6 @@ def add_pointers_to_video(
                 bbox_center_x = (bbox_coords[0] + bbox_coords[2])//2
                 # bbox_center_y = (bbox_coords[1] + bbox_coords[3])//2
                 
-                # TODO normalise size / coords
                 cv2.arrowedLine(
                     img= frame,
                     pt1= (frame_w//2, int(frame_h*0.8)),
@@ -67,7 +65,6 @@ def add_pointers_to_video(
     out_video.write_videofile(output_filepath, audio=True, logger=None)
 
 def get_caption_chunks(text_segment, start_time_s, end_time_s):
-    # TODO better split method, dynamic # words
     chunks = {}
     CHUNK_SIZE = 5
     word_list = text_segment.split(" ")

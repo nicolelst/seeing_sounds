@@ -148,6 +148,9 @@ def main():
 -	print(nets)
 +	# print(nets)
     ...
+-	model = torch.nn.DataParallel(model, device_ids=opt.gpu_ids)
++	model = torch.nn.DataParallel(model)
+    ...
 	for speaker_index in range(opt.number_of_speakers):
         ...
 		if opt.reliable_face:

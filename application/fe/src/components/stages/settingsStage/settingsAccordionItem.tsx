@@ -27,7 +27,6 @@ export default function SettingsAccordionItem({
 			<AccordionContent className="px-1 pt-1 pb-4">
 				{scrollable ?? false ? (
 					<ScrollArea className="h-52 pr-4">
-						{/* TODO dynamically determine size based on screen */}
 						{children}
 					</ScrollArea>
 				) : (

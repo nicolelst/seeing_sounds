@@ -192,11 +192,11 @@ async def get_annotated_video(request_id: str):
             content = {
                 "type": "URI", 
                 "title": "Service Unavailable", 
-                "status": 503,
+                "status": "503",
                 "detail": f"Video processing in progress. The server is still processing the request with ID [{request_id}] (status = {proc_thread_mgr.get_status(request_id)}). Please try again later.", 
             },
             headers = {
-                "Retry-After": 60 # retry in 1 minute
+                "Retry-After": "60" # retry in 1 minute
             }
         )
     
@@ -207,7 +207,7 @@ async def get_annotated_video(request_id: str):
             content = {
                 "type": "URI", 
                 "title": "Internal Server Error", 
-                "status": 500,
+                "status": "500",
                 "detail": f"{proc_thread_mgr.get_error_msg(request_id)} while processing request with ID [{request_id}]. Please create a new request with POST /upload_video.", 
             }
         )

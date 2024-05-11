@@ -9,7 +9,6 @@ export default function Instructions(): ReactElement {
 				description="Select a video of a conversation with multiple speakers.
 					Drag and drop the video file into the box on the left, or
 					click to browse files. (Accepted filetypes: MP4)"
-				// TODO more filetypes
 			/>
 			<InstructionItem
 				num={2}

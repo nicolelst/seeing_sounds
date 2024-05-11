@@ -21,7 +21,3 @@ osascript -e "tell app \"Terminal\"
     do script \"$RUN_FE_CMDS\"
 end tell"
 echo ">>> Access React web interface at http://localhost:$FE_PORT" 
-
-# TODO automatically close previous windows on ctrl-c
-# ( trap exit SIGINT ; read -r -d '' _ </dev/tty ) ## wait for Ctrl-C
-# echo script still running...

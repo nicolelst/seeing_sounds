@@ -66,7 +66,6 @@ export default function FileDropzone({
         setVideoFilepath(URL.createObjectURL(acceptedFiles[0]));
       }
     },
-    // accept: TODO file types
   });
 
   const iconStyle = "h-20 w-20 mb-2";
@@ -124,7 +123,6 @@ export default function FileDropzone({
             getValues={getValues}
           />
         ) : (
-          // TODO add more filetypes
           <em>Accepted filetypes: MP4</em>
         )}
       </div>

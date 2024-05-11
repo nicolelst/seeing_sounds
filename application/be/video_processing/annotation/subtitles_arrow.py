@@ -16,7 +16,6 @@ def add_subtitles_pointer_to_video(
         output_filepath, 
         video_settings: VideoSettings
 ):
-    # TODO no speech = no arrow
     pointers_video_filepath = get_annot_temp_filename(video_filepath)
     add_pointers_to_video(
         input_filepath = video_filepath, 
@@ -53,6 +52,3 @@ def add_subtitles_pointer_to_video(
     output_video = CompositeVideoClip(video_components)
     output_video.write_videofile(output_filepath, logger=None) 
     os.remove(pointers_video_filepath) 
-    # https://github.com/Zulko/moviepy/issues/281#issuecomment-1185226502
-    # output_video.write_videofile(output_filepath, fps=FPS, audio_fps=16000, audio_bitrate="192k") # TODO copy to all ? still broken
-    # output_video.write_videofile(output_filepath, fps=44100, audio_fps=16000, audio_bitrate="192k") 

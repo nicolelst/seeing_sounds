@@ -57,6 +57,3 @@ def add_coloured_subtitles_to_video(
     output_video.write_videofile(output_filepath, logger=None) 
     if show_bbox:
         os.remove(bbox_video_filepath)
-    # https://github.com/Zulko/moviepy/issues/281#issuecomment-1185226502
-    # output_video.write_videofile(output_filepath, fps=FPS, audio_fps=16000, audio_bitrate="192k") # TODO copy to all ? still broken
-    # output_video.write_videofile(output_filepath, fps=44100, audio_fps=16000, audio_bitrate="192k") 

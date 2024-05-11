@@ -11,7 +11,6 @@ export default function SpeakerListDisplay({
 }: SpeakerListDisplayProps): ReactElement {
   return (
     <div className="flex flex-row px-4 gap-x-4 gap-y-2 max-h-44 flex-wrap overflow-y-scroll">
-      {/* TODO dynamic height ? */}
       {speakerThumbnailURLs.map((imgURL, idx) => (
         <SpeakerAvatar
           // className="mx-auto"

@@ -44,7 +44,7 @@ def add_floating_subtitles_to_video(
             end_time_s = segment["end"]
             end_frame = int(end_time_s * FPS)
 
-            bbox_coords = np.mean(bbox_list[start_frame:end_frame+1, :], axis=0) # TODO match text, check for loooooong segments, split chunks
+            bbox_coords = np.mean(bbox_list[start_frame:end_frame+1, :], axis=0)
             bbox_width_mean = bbox_coords[2]-bbox_coords[0]
             # bbox_height_mean = bbox_coords[3]-bbox_coords[1]
             # print(i+1, start_time_s, end_time_s, (bbox_coords[0], bbox_coords[3]), segment["text"])
@@ -62,8 +62,6 @@ def add_floating_subtitles_to_video(
                 ).set_start(chunks["time_start"][j])\
                 .set_end(chunks["time_end"][j])\
                 .set_position((bbox_coords[0], bbox_coords[3])) # top left, mean
-                # .set_position(lambda t: (bbox_list[int(t*FPS), 0], bbox_list[int(t*FPS), 3])) # top left, dynamic 
-                # TODO wobbly and reads last speaker bbox only bc its from the list value at composite time
 
                 video_components.append(subtitle_clip) 
 

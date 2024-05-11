@@ -127,7 +127,10 @@ def main():
             # Draw faces
             frame_draw = frame.copy()
             draw = ImageDraw.Draw(frame_draw)
-            draw.rectangle(boxes_dic[s][i], outline=(255, 0, 0), width=6) 
+            try: 
+                draw.rectangle(boxes_dic[s][i], outline=(255, 0, 0), width=6) 
+            except:
+                draw.rectangle(boxes_dic[s][-1], outline=(255, 0, 0), width=6) 
             # Add to frame list
             frames_tracked.append(frame_draw)
         dim = frames_tracked[0].size

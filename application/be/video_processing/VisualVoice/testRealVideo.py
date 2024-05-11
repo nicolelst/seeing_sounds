@@ -117,7 +117,7 @@ def main():
 
 	# construct our audio-visual model
 	model = AudioVisualModel(nets, opt)
-	model = torch.nn.DataParallel(model, device_ids=opt.gpu_ids)
+	model = torch.nn.DataParallel(model)
 	model.to(opt.device)
 	model.eval()
 	mtcnn = MTCNN(keep_all=True, device=opt.device)

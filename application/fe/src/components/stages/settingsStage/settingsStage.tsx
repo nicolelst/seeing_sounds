@@ -61,7 +61,7 @@ export function SettingsStage({
               label="Select captioning interface"
               description="How should captions be displayed?"
               error={errors.annotationType}
-              // TODO add interface type preview/explanation
+              // TODO add detailed interface type preview/explanation
             >
               <InterfaceSelector
                 value={getValues("annotationType")}

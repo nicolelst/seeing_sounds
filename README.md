@@ -165,9 +165,9 @@ Output: annotated video + transcript with captions and speaker identification
    - message format from BE
    ```json
    {
-    request_id: "request id",
-    status: "processing status",
-    message: "error message if any"
+    "request_id": "request id",
+    "status": "processing status",
+    "message": "error message if any"
    }
    ```
 3. GET /download_annotated
