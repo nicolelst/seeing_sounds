@@ -3,4 +3,5 @@ application/be/endpoints/temp
 application/be/endpoints/checkpoints/*
 application/be/endpoints/*TEMP_MPY*
 application/be/video_processing/VisualVoice/pretrained_models/*.pth
+speaker_diarization/pyannote_config.py
 TODO.md
