@@ -56,6 +56,31 @@ def main():
 +			print("Speaker", speaker_index+1, "reliable face score:", best_score)
 ```
 
+## Handle exception 
+Occasionally, when a face is not detected in some frames, an IndexError occurs when drawing the bounding boxes in [utils/detectFaces.py](./VisualVoice/utils/detectFaces.py).
+```
+Tracking frame: 133 /Users/User/Library/Python/3.8/lib/python/site-packages/face_alignment/api.py:147: UserWarning: No faces were detected.
+  warnings.warn("No faces were detected.")
+...
+draw.rectangle(boxes_dic[s][i], outline=(255, 0, 0), width=6) 
+IndexError: list index out of range
+
+```
+The following was added to handle this exception.
+```diff
+    for s in range(args.number_of_speakers):
+        frames_tracked = []
+        for i, frame in enumerate(frames):
+            # Draw faces
+            frame_draw = frame.copy()
+            draw = ImageDraw.Draw(frame_draw)
+-           draw.rectangle(boxes_dic[s][i], outline=(255, 0, 0), width=6) 
++           try: 
++               draw.rectangle(boxes_dic[s][i], outline=(255, 0, 0), width=6) 
++           except:
++               draw.rectangle(boxes_dic[s][-1], outline=(255, 0, 0), width=6) 
+```
+
 ## Update deprecated functions
 Since the release of VisualVoice three years ago, some of the functions and libraries used have been deprecated. 
 
