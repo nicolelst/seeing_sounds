@@ -2,6 +2,7 @@
 Final Year Project submitted to the School of Computer Science and Engineering of Nanyang Technological University in 2024
 
 The final report can be found [here](https://hdl.handle.net/10356/175150).
+The video demo can be found [here](https://youtu.be/5kAdRJ9Y3zc).
 
 ## About this project 
 The World Health Organisation estimates that hearing loss will impact 2.5 billion people by 2050, and such conditions will be disabling for 10% of the global population. The growing demand for assistive technology for hearing impairment can be attributed to a globally ageing population and unsafe listening practices among young adults. 
