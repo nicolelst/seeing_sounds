@@ -1,6 +1,30 @@
 # SCSE23-0038 The Augmented Human -- Seeing Sounds
 Final Year Project submitted to the School of Computer Science and Engineering of Nanyang Technological University in 2024
 
+## Table of contents
+- [Table of contents](#table-of-contents)
+- [About this project](#about-this-project)
+   - [Video demo](#video-demo)
+   - [Final report](#final-report)
+- [Getting started](#getting-started)
+   - [Install dependencies](#install-dependencies)
+   - [Frontend packages](#frontend-packages)
+   - [FastAPI requirements](#fastapi-requirements)
+   - [VisualVoice speech separation requirements](#visualvoice-speech-separation-requirements)
+   - [VisualVoice pretrained models](#visualvoice-pretrained-models)
+   - [Whisper speech recognition requirements](#whisper-speech-recognition-requirements)
+   - [Transcript generation requirements](#transcript-generation-requirements)
+   - [Run application](#run-application)
+   - [Run application using bash script](#run-application-using-bash-script)
+   - [Run application manually](#run-application-manually)
+- [Directory structure](#directory-structure)
+- [Frontend (React JS)](#frontend-react-js)
+- [Backend (Python)](#backend-python)
+   - [Video processing flow](#video-processing-flow)
+   - [API endpoints](#api-endpoints)
+- [Acknowledgements](#acknowledgements)
+
+
 ## About this project 
 The World Health Organisation estimates that hearing loss will impact 2.5 billion people by 2050, and such conditions will be disabling for 10% of the global population. The growing demand for assistive technology for hearing impairment can be attributed to a globally ageing population and unsafe listening practices among young adults. 
 
